@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: quizcode
+  profiles:
+    active: local
+  mongodb:
+    uri: ${MONGO_URI}
+    database: ${MONGO_DB}
+jwt:
+  secret: ${JWT_SECRET}
