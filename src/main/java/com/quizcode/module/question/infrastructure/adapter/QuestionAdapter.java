@@ -17,4 +17,9 @@ public class QuestionAdapter implements QuestionPort {
     public void deleteQuestionsByQuizId(String quizId) {
         questionService.deleteByQuizId(quizId);
     }
+
+    @Override
+    public boolean hasQuestions(String quizId) {
+        return questionService.hasQuestions(quizId);
+    }
 }

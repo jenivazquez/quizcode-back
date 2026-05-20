@@ -4,18 +4,22 @@ import com.quizcode.error.exception.ForbiddenAccessExceptionCustom;
 import com.quizcode.error.exception.InvalidDataExceptionCustom;
 import com.quizcode.error.exception.InvalidStatusExceptionCustom;
 import com.quizcode.error.exception.NotFoundExceptionCustom;
+import com.quizcode.module.quiz.domain.QuestionPort;
 import com.quizcode.module.quiz.domain.QuizRepository;
 import com.quizcode.module.quiz.domain.entity.Quiz;
 import com.quizcode.module.quiz.domain.entity.QuizStatus;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
 public class QuizValidator {
 
     private final QuizRepository quizRepository;
+    private final QuestionPort questionPort;
 
-    public QuizValidator(QuizRepository quizRepository) {
+    public QuizValidator(QuizRepository quizRepository, @Lazy QuestionPort questionPort) {
         this.quizRepository = quizRepository;
+        this.questionPort = questionPort;
     }
 
     public void validateQuizToCreate(Quiz quiz) {
@@ -38,6 +42,7 @@ public class QuizValidator {
         Quiz savedQuiz = quizRepository.findById(id).orElseThrow(() -> new NotFoundExceptionCustom("El cuestionario no existe"));
         checkOwnership(sentOwnerId, savedQuiz.getOwnerId());
         checkStatusTransition(savedQuiz.getStatus(), sentStatus);
+        if (sentStatus == QuizStatus.PUBLISHED) checkHasQuestions(id);
     }
 
     public void validateQuizToDelete(String id, String sentOwnerId) {
@@ -64,6 +69,12 @@ public class QuizValidator {
     private void checkEditTitleUnique(String ownerId, String title, String id) {
         if (quizRepository.existsByOwnerIdAndTitleExcludingId(ownerId, title, id)) {
             throw new InvalidDataExceptionCustom("Ya tienes un cuestionario con ese título");
+        }
+    }
+
+    private void checkHasQuestions(String quizId) {
+        if (!questionPort.hasQuestions(quizId)) {
+            throw new InvalidDataExceptionCustom("No puedes publicar un cuestionario sin preguntas");
         }
     }
 

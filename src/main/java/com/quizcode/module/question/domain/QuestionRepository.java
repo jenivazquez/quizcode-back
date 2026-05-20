@@ -13,4 +13,5 @@ public interface QuestionRepository {
     void update(Question question);
     void delete(String id);
     void deleteByQuizId(String quizId);
+    boolean existsByQuizId(String quizId);
 }

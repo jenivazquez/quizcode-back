@@ -47,4 +47,9 @@ public class QuestionServiceImpl implements QuestionService {
     public void deleteByQuizId(String quizId) {
         questionRepository.deleteByQuizId(quizId);
     }
+
+    @Override
+    public boolean hasQuestions(String quizId) {
+        return questionRepository.existsByQuizId(quizId);
+    }
 }

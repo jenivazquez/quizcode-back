@@ -10,4 +10,5 @@ public interface QuestionService {
     void update(String ownerId, Question question);
     void delete(String ownerId, String quizId, String id);
     void deleteByQuizId(String quizId);
+    boolean hasQuestions(String quizId);
 }
