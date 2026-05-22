@@ -12,6 +12,4 @@ public interface QuizService {
     void update(Quiz quiz);
     void updateStatus(String id, String ownerId, QuizStatus status);
     void delete(String id, String ownerId);
-    void lockQuizIfHasRooms(String id);
-    void unlockQuizIfNoRooms(String id);
 }

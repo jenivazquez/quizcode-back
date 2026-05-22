@@ -1,1 +1,0 @@
-package com.quizcode.module.question.domain;

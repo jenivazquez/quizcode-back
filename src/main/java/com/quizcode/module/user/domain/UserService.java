@@ -7,5 +7,4 @@ public interface UserService {
     void update(User user);
     User findById(String id);
     void updateStatus(String id, Boolean active);
-    String verifyLoginAndGetId(String email, String password);
 }

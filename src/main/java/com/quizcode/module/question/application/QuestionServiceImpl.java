@@ -42,14 +42,4 @@ public class QuestionServiceImpl implements QuestionService {
         questionValidator.validateToDelete(ownerId, quizId, id);
         questionRepository.delete(id);
     }
-
-    @Override
-    public void deleteByQuizId(String quizId) {
-        questionRepository.deleteByQuizId(quizId);
-    }
-
-    @Override
-    public boolean hasQuestions(String quizId) {
-        return questionRepository.existsByQuizId(quizId);
-    }
 }

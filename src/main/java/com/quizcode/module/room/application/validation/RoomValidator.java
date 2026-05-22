@@ -8,6 +8,7 @@ import com.quizcode.module.room.domain.RoomToQuizPort;
 import com.quizcode.module.room.domain.RoomRepository;
 import com.quizcode.module.room.domain.entity.Room;
 import com.quizcode.module.room.domain.entity.RoomStatus;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,7 +17,7 @@ public class RoomValidator {
     private final RoomRepository roomRepository;
     private final RoomToQuizPort quizPort;
 
-    public RoomValidator(RoomRepository roomRepository, RoomToQuizPort quizPort) {
+    public RoomValidator(RoomRepository roomRepository, @Lazy RoomToQuizPort quizPort) {
         this.roomRepository = roomRepository;
         this.quizPort = quizPort;
     }

@@ -9,6 +9,4 @@ public interface QuestionService {
     List<Question> findByQuizId(String ownerId, String quizId);
     void update(String ownerId, Question question);
     void delete(String ownerId, String quizId, String id);
-    void deleteByQuizId(String quizId);
-    boolean hasQuestions(String quizId);
 }

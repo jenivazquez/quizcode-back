@@ -8,7 +8,6 @@ import com.quizcode.module.quiz.domain.QuizRepository;
 import com.quizcode.module.quiz.domain.QuizService;
 import com.quizcode.module.quiz.domain.QuizToQuestionPort;
 import com.quizcode.module.quiz.domain.QuizToRoomPort;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +20,7 @@ public class QuizServiceImpl implements QuizService {
     private final QuizToQuestionPort questionPort;
     private final QuizToRoomPort roomPort;
 
-    public QuizServiceImpl(QuizRepository quizRepository, QuizValidator quizValidator, @Lazy QuizToQuestionPort questionPort, @Lazy QuizToRoomPort roomPort) {
+    public QuizServiceImpl(QuizRepository quizRepository, QuizValidator quizValidator, QuizToQuestionPort questionPort, QuizToRoomPort roomPort) {
         this.quizRepository = quizRepository;
         this.quizValidator = quizValidator;
         this.questionPort = questionPort;
@@ -64,21 +63,5 @@ public class QuizServiceImpl implements QuizService {
         roomPort.deleteRoomsByQuizId(id);
         questionPort.deleteQuestionsByQuizId(id);
         quizRepository.delete(id);
-    }
-
-    @Override
-    public void lockQuizIfHasRooms(String id) {
-        quizRepository.findById(id)
-                .filter(quiz -> quiz.getStatus() != QuizStatus.LOCKED)
-                .filter(quiz -> roomPort.hasRooms(id))
-                .ifPresent(quiz -> quizRepository.updateStatus(id, QuizStatus.LOCKED));
-    }
-
-    @Override
-    public void unlockQuizIfNoRooms(String id) {
-        quizRepository.findById(id)
-                .filter(quiz -> quiz.getStatus() == QuizStatus.LOCKED)
-                .filter(quiz -> !roomPort.hasRooms(id))
-                .ifPresent(quiz -> quizRepository.updateStatus(id, QuizStatus.PUBLISHED));
     }
 }

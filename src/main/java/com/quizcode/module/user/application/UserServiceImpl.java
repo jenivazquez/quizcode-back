@@ -1,6 +1,5 @@
 package com.quizcode.module.user.application;
 
-import com.quizcode.error.exception.InvalidCredentialsExceptionCustom;
 import com.quizcode.error.exception.NotFoundExceptionCustom;
 import com.quizcode.module.user.application.validation.UserValidator;
 import com.quizcode.module.user.domain.UserRepository;
@@ -42,12 +41,5 @@ public class UserServiceImpl implements UserService {
     public void updateStatus(String id, Boolean active) {
         userValidator.validateToUpdateStatus(id, active);
         userRepository.updateStatus(id, active);
-    }
-
-    @Override
-    public String verifyLoginAndGetId(String email, String password) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new InvalidCredentialsExceptionCustom("Las credenciales son incorrectas."));
-        userValidator.validateCredentials(user, password);
-        return user.getId();
     }
 }
