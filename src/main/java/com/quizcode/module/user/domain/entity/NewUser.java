@@ -1,5 +1,6 @@
 package com.quizcode.module.user.domain.entity;
 
+import com.quizcode.error.exception.AutoGenerationExceptionCustom;
 import com.quizcode.error.exception.InvalidDataExceptionCustom;
 import com.quizcode.module.user.domain.PasswordHasher;
 import lombok.Getter;
@@ -16,8 +17,7 @@ public class NewUser {
 
     public NewUser(String email, String password, String name, String surname1, String surname2, PasswordHasher hasher) {
         validate(email, password, name, surname1, surname2);
-        String encodedPass = hasher.hash(password);
-        this.user = new User(null, email, encodedPass, name, surname1, surname2, true);
+        this.user = new User(null, email, hashPassword(password, hasher), name, surname1, surname2, true);
     }
 
     private void validate(String email, String password, String name, String surname1, String surname2) {
@@ -33,6 +33,14 @@ public class NewUser {
         fields.put("primer apellido", surname1);
         fields.put("segundo apellido", surname2);
         ValidatorUtil.validateFieldsNotNull(fields);
+    }
+
+    private String hashPassword(String password, PasswordHasher hasher) {
+        try {
+            return hasher.hash(password);
+        } catch (Exception e) {
+            throw new AutoGenerationExceptionCustom("Error al procesar la contraseña");
+        }
     }
 
     private void validateFormatPassword(String password) {
