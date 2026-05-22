@@ -30,20 +30,20 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public String create(Quiz quiz) {
-        quizValidator.validateQuizToCreate(quiz);
+        quizValidator.validateToCreate(quiz);
         return quizRepository.create(quiz);
     }
 
     @Override
     public void update(Quiz quiz) {
-        quizValidator.validateQuizToUpdate(quiz);
+        quizValidator.validateToUpdate(quiz);
         quizRepository.update(quiz);
     }
 
     @Override
     public Quiz findById(String id, String ownerId) {
         Quiz quiz = quizRepository.findById(id).orElseThrow(() -> new NotFoundExceptionCustom("El cuestionario no existe"));
-        quizValidator.validateQuizToFindById(quiz, ownerId);
+        quizValidator.validateToFindById(quiz, ownerId);
         return quiz;
     }
 
@@ -54,13 +54,13 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public void updateStatus(String id, String ownerId, QuizStatus status) {
-        quizValidator.validateQuizToUpdateStatus(id, status, ownerId);
+        quizValidator.validateToUpdateStatus(id, status, ownerId);
         quizRepository.updateStatus(id, status);
     }
 
     @Override
     public void delete(String id, String ownerId) {
-        quizValidator.validateQuizToDelete(id, ownerId);
+        quizValidator.validateToDelete(id, ownerId);
         roomPort.deleteRoomsByQuizId(id);
         questionPort.deleteQuestionsByQuizId(id);
         quizRepository.delete(id);

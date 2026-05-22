@@ -22,24 +22,24 @@ public class UserValidator {
         this.passwordHasher = passwordHasher;
     }
 
-    public void validateUserToCreate(User user) {
-        this.checkEmailDuplicated(user.getEmail());
+    public void validateToCreate(User newUser) {
+        this.checkEmailDuplicated(newUser.getEmail());
     }
 
-    public void validateUserToUpdate(User user) {
-        User savedUser = userRepository.findById(user.getId()).orElseThrow(() -> new NotFoundExceptionCustom("El usuario no existe"));
+    public void validateToUpdate(User newUser) {
+        User savedUser = userRepository.findById(newUser.getId()).orElseThrow(() -> new NotFoundExceptionCustom("El usuario no existe"));
         this.checkUserActive(savedUser);
     }
 
-    public void validateUserToUpdateStatus(String id, Boolean active) {
+    public void validateToUpdateStatus(String id, Boolean active) {
         if (active==null) throw new InvalidDataExceptionCustom("El campo activo es obligatorio");
         User savedUser = userRepository.findById(id).orElseThrow(() -> new NotFoundExceptionCustom("El usuario no existe"));
         if (Objects.equals(savedUser.getActive(), active)) throw new InvalidDataExceptionCustom("Estas intentando activar/desactivar un usuario que ya está en ese estado");
     }
 
-    public void validateCredentialsUser(User user, String password) {
-        this.checkUserActive(user);
-        this.checkUserPassword(password, user);
+    public void validateCredentials(User savedUser, String password) {
+        this.checkUserActive(savedUser);
+        this.checkUserPassword(password, savedUser);
     }
 
     private void checkEmailDuplicated(String email) {
@@ -48,14 +48,14 @@ public class UserValidator {
         }
     }
 
-    private void checkUserPassword(String password, User user) {
-        if (!passwordHasher.matches(password, user.getPassword())) {
+    private void checkUserPassword(String password, User savedUser) {
+        if (!passwordHasher.matches(password, savedUser.getPassword())) {
             throw new InvalidCredentialsExceptionCustom("Las credenciales son incorrectas.");
         }
     }
 
-    public void checkUserActive(User user) {
-        if (!Boolean.TRUE.equals(user.getActive())) {
+    public void checkUserActive(User savedUser) {
+        if (!Boolean.TRUE.equals(savedUser.getActive())) {
             throw new InvalidStatusExceptionCustom("El usuario está inactivo.");
         }
     }

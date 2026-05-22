@@ -19,19 +19,19 @@ public class QuestionValidator {
         this.quizPort = quizPort;
     }
 
-    public void validateToCreate(String ownerId, Question question) {
-        checkQuizEditable(question.getQuizId(), ownerId);
-        checkOrderNotDuplicated(question.getQuizId(), question.getOrder());
+    public void validateToCreate(String ownerId, Question newQuestion) {
+        checkQuizEditable(newQuestion.getQuizId(), ownerId);
+        checkOrderNotDuplicated(newQuestion.getQuizId(), newQuestion.getOrder());
     }
 
     public void validateToFindByQuizId(String ownerId, String quizId) {
         quizPort.checkQuizExistByOwner(quizId, ownerId);
     }
 
-    public void validateToUpdate(String ownerId, Question question) {
-        checkQuestionExists(question.getQuizId(), question.getId());
-        checkQuizEditable(question.getQuizId(), ownerId);
-        checkOrderNotDuplicatedForUpdate(question.getQuizId(), question.getOrder(), question.getId());
+    public void validateToUpdate(String ownerId, Question newQuestion) {
+        checkQuestionExists(newQuestion.getQuizId(), newQuestion.getId());
+        checkQuizEditable(newQuestion.getQuizId(), ownerId);
+        checkOrderNotDuplicatedForUpdate(newQuestion.getQuizId(), newQuestion.getOrder(), newQuestion.getId());
     }
 
     public void validateToDelete(String ownerId, String quizId, String id) {

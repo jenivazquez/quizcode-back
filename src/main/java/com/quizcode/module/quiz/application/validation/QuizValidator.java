@@ -25,43 +25,43 @@ public class QuizValidator {
         this.roomPort = roomPort;
     }
 
-    public void validateQuizToCreate(Quiz quiz) {
-        checkNewTitleUnique(quiz.getOwnerId(), quiz.getTitle());
+    public void validateToCreate(Quiz newQuiz) {
+        checkNewTitleUnique(newQuiz.getOwnerId(), newQuiz.getTitle());
     }
 
-    public void validateQuizToUpdate(Quiz quiz) {
-        Quiz savedQuiz = quizRepository.findById(quiz.getId()).orElseThrow(() -> new NotFoundExceptionCustom("El cuestionario no existe"));
-        checkOwnership(quiz.getOwnerId(), savedQuiz.getOwnerId());
+    public void validateToUpdate(Quiz newQuiz) {
+        Quiz savedQuiz = quizRepository.findById(newQuiz.getId()).orElseThrow(() -> new NotFoundExceptionCustom("El cuestionario no existe"));
+        checkOwnership(newQuiz.getOwnerId(), savedQuiz.getOwnerId());
         checkQuizEditable(savedQuiz);
-        checkEditTitleUnique(quiz.getOwnerId(), quiz.getTitle(), quiz.getId());
+        checkEditTitleUnique(newQuiz.getOwnerId(), newQuiz.getTitle(), newQuiz.getId());
     }
 
-    public void validateQuizToFindById(Quiz quiz, String sentOwnerId) {
-        this.checkOwnership(sentOwnerId, quiz.getOwnerId());
+    public void validateToFindById(Quiz savedQuiz, String ownerId) {
+        this.checkOwnership(ownerId, savedQuiz.getOwnerId());
     }
 
-    public void validateQuizToUpdateStatus(String id, QuizStatus sentStatus, String sentOwnerId) {
-        checkStatusInput(sentStatus);
+    public void validateToUpdateStatus(String id, QuizStatus newStatus, String ownerId) {
+        checkStatusInput(newStatus);
         Quiz savedQuiz = quizRepository.findById(id).orElseThrow(() -> new NotFoundExceptionCustom("El cuestionario no existe"));
-        checkOwnership(sentOwnerId, savedQuiz.getOwnerId());
-        checkStatusTransition(savedQuiz.getStatus(), sentStatus);
-        if (sentStatus == QuizStatus.PUBLISHED) checkHasQuestions(id);
-        if (sentStatus == QuizStatus.CREATED) checkHasNoRooms(id);
+        checkOwnership(ownerId, savedQuiz.getOwnerId());
+        checkStatusTransition(savedQuiz.getStatus(), newStatus);
+        if (newStatus == QuizStatus.PUBLISHED) checkHasQuestions(id);
+        if (newStatus == QuizStatus.CREATED) checkHasNoRooms(id);
     }
 
-    public void validateQuizToDelete(String id, String sentOwnerId) {
+    public void validateToDelete(String id, String ownerId) {
         Quiz savedQuiz = quizRepository.findById(id).orElseThrow(() -> new NotFoundExceptionCustom("El cuestionario no existe"));
-        checkOwnership(sentOwnerId, savedQuiz.getOwnerId());
+        checkOwnership(ownerId, savedQuiz.getOwnerId());
     }
 
-    private void checkStatusInput(QuizStatus sentStatus) {
-        if (sentStatus == null) throw new InvalidDataExceptionCustom("El campo estado es obligatorio");
-        if (sentStatus == QuizStatus.LOCKED) throw new InvalidDataExceptionCustom("No puedes bloquear este cuestionario manualmente. Se bloqueará automáticamente al crear la primera sala.");
+    private void checkStatusInput(QuizStatus newStatus) {
+        if (newStatus == null) throw new InvalidDataExceptionCustom("El campo estado es obligatorio");
+        if (newStatus == QuizStatus.LOCKED) throw new InvalidDataExceptionCustom("No puedes bloquear este cuestionario manualmente. Se bloqueará automáticamente al crear la primera sala.");
     }
 
-    private void checkStatusTransition(QuizStatus savedStatus, QuizStatus sentStatus) {
+    private void checkStatusTransition(QuizStatus savedStatus, QuizStatus newStatus) {
         if (savedStatus == QuizStatus.LOCKED) throw new InvalidStatusExceptionCustom("El cuestionario tiene salas activas y no puede cambiar de estado manualmente");
-        if (savedStatus == sentStatus) throw new InvalidStatusExceptionCustom("El cuestionario ya está en ese estado");
+        if (savedStatus == newStatus) throw new InvalidStatusExceptionCustom("El cuestionario ya está en ese estado");
     }
 
     private void checkNewTitleUnique(String ownerId, String title) {
@@ -88,17 +88,17 @@ public class QuizValidator {
         }
     }
 
-    private void checkOwnership(String sentOwnerId, String savedOwnerId) {
-        if (!sentOwnerId.equals(savedOwnerId)) {
+    private void checkOwnership(String ownerId, String savedOwnerId) {
+        if (!ownerId.equals(savedOwnerId)) {
             throw new ForbiddenAccessExceptionCustom("Este cuestionario no pertenece a tu usuario");
         }
     }
 
-    private void checkQuizEditable(Quiz quiz) {
-        if (quiz.getStatus() == QuizStatus.PUBLISHED) {
+    private void checkQuizEditable(Quiz savedQuiz) {
+        if (savedQuiz.getStatus() == QuizStatus.PUBLISHED) {
             throw new InvalidStatusExceptionCustom("No puedes modificar un cuestionario publicado");
         }
-        if (quiz.getStatus() == QuizStatus.LOCKED) {
+        if (savedQuiz.getStatus() == QuizStatus.LOCKED) {
             throw new InvalidStatusExceptionCustom("No puedes modificar un cuestionario que tiene salas activas");
         }
     }
