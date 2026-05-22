@@ -32,10 +32,6 @@ public class Quiz {
         validate();
     }
 
-    public boolean isEditable() {
-        return status == QuizStatus.CREATED;
-    }
-
     private void validate() {
         this.validateTitle();
         this.validateDescription();
@@ -68,5 +64,13 @@ public class Quiz {
         if (Boolean.FALSE.equals(hasLimit) && limitMinutes != null) {
             throw new InvalidDataExceptionCustom("Cuando el cuestionario no tiene límite de respuesta, el campo tiempo límite no debe tener valor");
         }
+    }
+
+    public boolean isEditable() {
+        return status == QuizStatus.CREATED;
+    }
+
+    public boolean isRoomAllowed() {
+        return status == QuizStatus.PUBLISHED || status == QuizStatus.LOCKED;
     }
 }

@@ -1,11 +1,11 @@
 package com.quizcode.module.question.infrastructure.adapter;
 
 import com.quizcode.module.question.domain.QuestionService;
-import com.quizcode.module.quiz.domain.QuestionPort;
+import com.quizcode.module.quiz.domain.QuizToQuestionPort;
 import org.springframework.stereotype.Component;
 
 @Component
-public class QuestionAdapter implements QuestionPort {
+public class QuestionAdapter implements QuizToQuestionPort {
 
     private final QuestionService questionService;
 

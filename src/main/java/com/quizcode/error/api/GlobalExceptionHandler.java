@@ -1,6 +1,7 @@
 package com.quizcode.error.api;
 
 import com.quizcode.error.api.dto.ErrorResponse;
+import com.quizcode.error.exception.AutoGenerationExceptionCustom;
 import com.quizcode.error.exception.ForbiddenAccessExceptionCustom;
 import com.quizcode.error.exception.InvalidCredentialsExceptionCustom;
 import com.quizcode.error.exception.InvalidDataExceptionCustom;
@@ -42,9 +43,14 @@ public class GlobalExceptionHandler {
         return getResponseEntity(exception, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(AutoGenerationExceptionCustom.class)
+    ResponseEntity<ErrorResponse> handleAutoGeneration(AutoGenerationExceptionCustom exception) {
+        return getResponseEntity(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     ResponseEntity<ErrorResponse> handleNotReadable(HttpMessageNotReadableException exception) {
-        return getResponseEntity("Uno de los campos tiene un valorque no corresponde con sus valores permitidos", HttpStatus.BAD_REQUEST);
+        return getResponseEntity("Uno de los campos tiene un valor que no corresponde con sus valores permitidos", HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(RuntimeException.class)

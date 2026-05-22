@@ -1,11 +1,11 @@
 package com.quizcode.module.user.infrastructure.adapter;
 
-import com.quizcode.module.authorization.domain.UserPort;
+import com.quizcode.module.authorization.domain.AuthToUserPort;
 import com.quizcode.module.user.domain.UserService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserAdapter implements UserPort {
+public class UserAdapter implements AuthToUserPort {
 
     private final UserService userService;
 

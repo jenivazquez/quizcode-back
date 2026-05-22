@@ -5,16 +5,16 @@ import com.quizcode.error.exception.InvalidStatusExceptionCustom;
 import com.quizcode.error.exception.NotFoundExceptionCustom;
 import com.quizcode.module.question.domain.QuestionRepository;
 import com.quizcode.module.question.domain.entity.question.Question;
-import com.quizcode.module.question.domain.QuizPort;
+import com.quizcode.module.question.domain.QuestionToQuizPort;
 import org.springframework.stereotype.Component;
 
 @Component
 public class QuestionValidator {
 
     private final QuestionRepository questionRepository;
-    private final QuizPort quizPort;
+    private final QuestionToQuizPort quizPort;
 
-    public QuestionValidator(QuestionRepository questionRepository, QuizPort quizPort) {
+    public QuestionValidator(QuestionRepository questionRepository, QuestionToQuizPort quizPort) {
         this.questionRepository = questionRepository;
         this.quizPort = quizPort;
     }
@@ -25,7 +25,7 @@ public class QuestionValidator {
     }
 
     public void validateToFindByQuizId(String ownerId, String quizId) {
-        quizPort.checkQuizAccess(quizId, ownerId);
+        quizPort.checkQuizExistByOwner(quizId, ownerId);
     }
 
     public void validateToUpdate(String ownerId, Question question) {

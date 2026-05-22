@@ -6,7 +6,8 @@ import com.quizcode.module.quiz.domain.entity.Quiz;
 import com.quizcode.module.quiz.domain.entity.QuizStatus;
 import com.quizcode.module.quiz.domain.QuizRepository;
 import com.quizcode.module.quiz.domain.QuizService;
-import com.quizcode.module.quiz.domain.QuestionPort;
+import com.quizcode.module.quiz.domain.QuizToQuestionPort;
+import com.quizcode.module.quiz.domain.QuizToRoomPort;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +18,14 @@ public class QuizServiceImpl implements QuizService {
 
     private final QuizRepository quizRepository;
     private final QuizValidator quizValidator;
-    private final QuestionPort questionPort;
+    private final QuizToQuestionPort questionPort;
+    private final QuizToRoomPort roomPort;
 
-    public QuizServiceImpl(QuizRepository quizRepository, QuizValidator quizValidator, @Lazy QuestionPort questionPort) {
+    public QuizServiceImpl(QuizRepository quizRepository, QuizValidator quizValidator, @Lazy QuizToQuestionPort questionPort, @Lazy QuizToRoomPort roomPort) {
         this.quizRepository = quizRepository;
         this.quizValidator = quizValidator;
         this.questionPort = questionPort;
+        this.roomPort = roomPort;
     }
 
     @Override
@@ -58,7 +61,24 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public void delete(String id, String ownerId) {
         quizValidator.validateQuizToDelete(id, ownerId);
+        roomPort.deleteRoomsByQuizId(id);
         questionPort.deleteQuestionsByQuizId(id);
         quizRepository.delete(id);
+    }
+
+    @Override
+    public void lockQuizIfHasRooms(String id) {
+        quizRepository.findById(id)
+                .filter(quiz -> quiz.getStatus() != QuizStatus.LOCKED)
+                .filter(quiz -> roomPort.hasRooms(id))
+                .ifPresent(quiz -> quizRepository.updateStatus(id, QuizStatus.LOCKED));
+    }
+
+    @Override
+    public void unlockQuizIfNoRooms(String id) {
+        quizRepository.findById(id)
+                .filter(quiz -> quiz.getStatus() == QuizStatus.LOCKED)
+                .filter(quiz -> !roomPort.hasRooms(id))
+                .ifPresent(quiz -> quizRepository.updateStatus(id, QuizStatus.PUBLISHED));
     }
 }
