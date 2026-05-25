@@ -28,6 +28,12 @@ public class QuestionValidator {
         quizPort.checkQuizExistByOwner(quizId, ownerId);
     }
 
+    public void validateToFindByQuizIdToAnswer(String quizId) {
+        if (!quizPort.isAnswerAllowedByQuiz(quizId)) {
+            throw new InvalidStatusExceptionCustom("Este cuestionario no permite respuestas");
+        }
+    }
+
     public void validateToUpdate(String ownerId, Question newQuestion) {
         checkQuestionExists(newQuestion.getQuizId(), newQuestion.getId());
         checkQuizEditable(newQuestion.getQuizId(), ownerId);

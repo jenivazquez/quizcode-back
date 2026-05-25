@@ -32,6 +32,12 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public List<Question> findByQuizIdToAnswer(String quizId) {
+        questionValidator.validateToFindByQuizIdToAnswer(quizId);
+        return questionRepository.findByQuizId(quizId);
+    }
+
+    @Override
     public void update(String ownerId, Question question) {
         questionValidator.validateToUpdate(ownerId, question);
         questionRepository.update(question);

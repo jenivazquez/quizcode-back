@@ -73,4 +73,8 @@ public class Quiz {
     public boolean isRoomAllowed() {
         return status == QuizStatus.PUBLISHED || status == QuizStatus.LOCKED;
     }
+
+    public boolean isAnswerAllowed() {
+        return status == QuizStatus.LOCKED;
+    }
 }

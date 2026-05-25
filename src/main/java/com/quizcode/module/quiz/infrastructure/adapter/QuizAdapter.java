@@ -19,17 +19,22 @@ public class QuizAdapter implements QuestionToQuizPort, RoomToQuizPort {
 
     @Override
     public void checkQuizExistByOwner(String quizId, String ownerId) {
-        quizAdapterService.findById(quizId, ownerId);
+        quizAdapterService.findByIdAndOwnerId(quizId, ownerId);
     }
 
     @Override
     public boolean isQuizEditable(String quizId, String ownerId) {
-        return quizAdapterService.findById(quizId, ownerId).isEditable();
+        return quizAdapterService.findByIdAndOwnerId(quizId, ownerId).isEditable();
+    }
+
+    @Override
+    public boolean isAnswerAllowedByQuiz(String quizId) {
+        return quizAdapterService.findById(quizId).isAnswerAllowed();
     }
 
     @Override
     public boolean isRoomAllowedByQuiz(String quizId, String ownerId) {
-        return quizAdapterService.findById(quizId, ownerId).isRoomAllowed();
+        return quizAdapterService.findByIdAndOwnerId(quizId, ownerId).isRoomAllowed();
     }
 
     @Override

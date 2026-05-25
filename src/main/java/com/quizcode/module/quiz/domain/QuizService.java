@@ -8,6 +8,7 @@ import java.util.List;
 public interface QuizService {
     String create(Quiz quiz);
     Quiz findById(String id, String ownerId);
+    Quiz findByIdToAnswer(String id);
     List<Quiz> findByOwnerId(String ownerId);
     void update(Quiz quiz);
     void updateStatus(String id, String ownerId, QuizStatus status);

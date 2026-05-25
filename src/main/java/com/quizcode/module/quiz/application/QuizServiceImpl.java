@@ -47,6 +47,13 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
+    public Quiz findByIdToAnswer(String id) {
+        Quiz quiz = quizRepository.findById(id).orElseThrow(() -> new NotFoundExceptionCustom("El cuestionario no existe"));
+        quizValidator.validateToFindByIdToAnswer(quiz);
+        return quiz;
+    }
+
+    @Override
     public List<Quiz> findByOwnerId(String ownerId) {
         return quizRepository.findByOwnerId(ownerId);
     }

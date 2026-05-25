@@ -2,6 +2,7 @@ package com.quizcode.module.quiz.api.mapper;
 
 import com.quizcode.module.quiz.api.dto.QuizRequest;
 import com.quizcode.module.quiz.api.dto.QuizResponse;
+import com.quizcode.module.quiz.api.dto.QuizToAnswerResponse;
 import com.quizcode.module.quiz.domain.entity.EditQuiz;
 import com.quizcode.module.quiz.domain.entity.NewQuiz;
 import com.quizcode.module.quiz.domain.entity.Quiz;
@@ -19,4 +20,6 @@ public interface QuizMapper {
     }
 
     QuizResponse quizToQuizResponse(Quiz quiz);
+
+    QuizToAnswerResponse quizToQuizToAnswerResponse(Quiz quiz);
 }

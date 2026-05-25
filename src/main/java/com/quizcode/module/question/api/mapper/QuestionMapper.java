@@ -2,8 +2,10 @@ package com.quizcode.module.question.api.mapper;
 
 import com.quizcode.module.question.api.dto.option.OptionRequest;
 import com.quizcode.module.question.api.dto.option.OptionResponse;
+import com.quizcode.module.question.api.dto.option.OptionToAnswerResponse;
 import com.quizcode.module.question.api.dto.question.QuestionRequest;
 import com.quizcode.module.question.api.dto.question.QuestionResponse;
+import com.quizcode.module.question.api.dto.question.QuestionToAnswerResponse;
 import com.quizcode.module.question.domain.entity.question.EditQuestion;
 import com.quizcode.module.question.domain.entity.question.NewQuestion;
 import com.quizcode.module.question.domain.entity.option.Option;
@@ -27,7 +29,11 @@ public interface QuestionMapper {
 
     QuestionResponse questionToQuestionResponse(Question question);
 
+    QuestionToAnswerResponse questionToQuestionToAnswerResponse(Question question);
+
     OptionResponse optionToOptionResponse(Option option);
+
+    OptionToAnswerResponse optionToOptionToAnswerResponse(Option option);
 
     Option optionRequestToOption(OptionRequest request);
 }

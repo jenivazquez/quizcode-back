@@ -25,10 +25,15 @@ public class QuizAdapterServiceImpl implements QuizAdapterService {
     }
 
     @Override
-    public Quiz findById(String id, String ownerId) {
+    public Quiz findByIdAndOwnerId(String id, String ownerId) {
         Quiz quiz = quizRepository.findById(id).orElseThrow(() -> new NotFoundExceptionCustom("El cuestionario no existe"));
         quizValidator.validateToFindById(quiz, ownerId);
         return quiz;
+    }
+
+    @Override
+    public Quiz findById(String id) {
+        return quizRepository.findById(id).orElseThrow(() -> new NotFoundExceptionCustom("El cuestionario no existe"));
     }
 
     @Override

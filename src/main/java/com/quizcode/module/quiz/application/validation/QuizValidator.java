@@ -39,6 +39,12 @@ public class QuizValidator {
         this.checkOwnership(ownerId, savedQuiz.getOwnerId());
     }
 
+    public void validateToFindByIdToAnswer(Quiz savedQuiz) {
+        if (!savedQuiz.isAnswerAllowed()) {
+            throw new InvalidStatusExceptionCustom("El cuestionario no está disponible");
+        }
+    }
+
     public void validateToUpdateStatus(String id, QuizStatus newStatus, String ownerId) {
         checkStatusInput(newStatus);
         Quiz savedQuiz = quizRepository.findById(id).orElseThrow(() -> new NotFoundExceptionCustom("El cuestionario no existe"));
