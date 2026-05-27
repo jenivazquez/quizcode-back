@@ -13,7 +13,7 @@ public class EditRoom {
 
     public EditRoom(String id, String name, String description, String quizId) {
         validate(id, name, description, quizId);
-        this.room = new Room(id, name, description, null, null, quizId, null, null, null);
+        this.room = new Room(id, name, description, null, null, quizId, null, null, null, null);
     }
 
     private void validate(String id, String name, String description, String quizId) {

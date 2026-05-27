@@ -18,8 +18,9 @@ public class Room {
     private final Instant createdAt;
     private final Instant startedAt;
     private final Instant finishedAt;
+    private final Boolean reviewed;
 
-    protected Room(String id, String name, String description, String code, RoomStatus status, String quizId, Instant createdAt, Instant startedAt, Instant finishedAt) {
+    protected Room(String id, String name, String description, String code, RoomStatus status, String quizId, Instant createdAt, Instant startedAt, Instant finishedAt, Boolean reviewed) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -29,6 +30,7 @@ public class Room {
         this.createdAt = createdAt;
         this.startedAt = startedAt;
         this.finishedAt = finishedAt;
+        this.reviewed = reviewed;
         validate();
     }
 

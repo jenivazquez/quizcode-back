@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface RoomRepository {
     String create(Room room);
     Optional<Room> findById(String id);
+    void markAsReviewed(String id);
     List<Room> findByQuizId(String quizId);
     List<Room> findByQuizIds(List<String> quizIds);
     Optional<Room> findByCode(String code);

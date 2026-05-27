@@ -34,4 +34,6 @@ public class RoomDocument {
     private Instant startedAt;
     @Field(write = Field.Write.ALWAYS)
     private Instant finishedAt;
+    @NotNull
+    private Boolean reviewed;
 }

@@ -111,4 +111,9 @@ public class RoomRepositoryImpl implements RoomRepository {
     public void deleteByQuizId(String quizId) {
         roomMongoRepository.deleteByQuizId(quizId);
     }
+
+    @Override
+    public void markAsReviewed(String id) {
+        roomMongoRepository.markAsReviewed(id);
+    }
 }

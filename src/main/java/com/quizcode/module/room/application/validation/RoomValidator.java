@@ -4,6 +4,7 @@ import com.quizcode.error.exception.ForbiddenAccessExceptionCustom;
 import com.quizcode.error.exception.InvalidDataExceptionCustom;
 import com.quizcode.error.exception.InvalidStatusExceptionCustom;
 import com.quizcode.error.exception.NotFoundExceptionCustom;
+import com.quizcode.module.room.domain.RoomToParticipationPort;
 import com.quizcode.module.room.domain.RoomToQuizPort;
 import com.quizcode.module.room.domain.RoomRepository;
 import com.quizcode.module.room.domain.entity.Room;
@@ -16,10 +17,12 @@ public class RoomValidator {
 
     private final RoomRepository roomRepository;
     private final RoomToQuizPort quizPort;
+    private final RoomToParticipationPort participationPort;
 
-    public RoomValidator(RoomRepository roomRepository, @Lazy RoomToQuizPort quizPort) {
+    public RoomValidator(RoomRepository roomRepository, @Lazy RoomToQuizPort quizPort, RoomToParticipationPort participationPort) {
         this.roomRepository = roomRepository;
         this.quizPort = quizPort;
+        this.participationPort = participationPort;
     }
 
     public void validateToCreate(String ownerId, Room newRoom) {
@@ -47,7 +50,14 @@ public class RoomValidator {
     public void validateToUpdateStatus(Room savedRoom, String ownerId, String quizId, RoomStatus status) {
         quizPort.checkQuizExistByOwner(quizId, ownerId);
         checkRoomBelongsToQuiz(savedRoom, quizId);
-        checkStatusTransition(savedRoom.getStatus(), status);
+        checkStatusTransition(savedRoom, status);
+    }
+
+    public void validateToMarkAsReviewed(Room savedRoom, String ownerId, String quizId) {
+        quizPort.checkQuizExistByOwner(quizId, ownerId);
+        checkRoomBelongsToQuiz(savedRoom, quizId);
+        checkRoomIsClosed(savedRoom);
+        checkNoPendingParticipations(savedRoom.getId());
     }
 
     public void validateToDelete(String id, String ownerId, String quizId) {
@@ -61,7 +71,8 @@ public class RoomValidator {
         checkExistRoomsOpenedByQuizId(quizId);
     }
 
-    private void checkStatusTransition(RoomStatus savedStatus, RoomStatus sentStatus) {
+    private void checkStatusTransition(Room savedRoom, RoomStatus sentStatus) {
+        RoomStatus savedStatus = savedRoom.getStatus();
         if (sentStatus == null) {
             throw new InvalidDataExceptionCustom("El campo estado es obligatorio");
         }
@@ -79,6 +90,27 @@ public class RoomValidator {
         }
         if (savedStatus == RoomStatus.OPENED && sentStatus != RoomStatus.PAUSED) {
             throw new InvalidStatusExceptionCustom("Una sala abierta solo puede cambiar al estado en pausa");
+        }
+        if (sentStatus == RoomStatus.PAUSED || sentStatus == RoomStatus.CLOSED) {
+            checkNoStartedParticipations(savedRoom.getId());
+        }
+    }
+
+    private void checkRoomIsClosed(Room room) {
+        if (room.getStatus() != RoomStatus.CLOSED) {
+            throw new InvalidStatusExceptionCustom("La sala debe estar cerrada para realizar esta operación");
+        }
+    }
+
+    private void checkNoStartedParticipations(String roomId) {
+        if (participationPort.hasStartedParticipations(roomId)) {
+            throw new InvalidStatusExceptionCustom("No se puede pausar/cerar la sala porque hay participantes activos");
+        }
+    }
+
+    private void checkNoPendingParticipations(String roomId) {
+        if (participationPort.hasPendingReviews(roomId)) {
+            throw new InvalidStatusExceptionCustom("No se puede marcar la sala como revisada porque hay participaciones pendientes de revisión de la IA");
         }
     }
 

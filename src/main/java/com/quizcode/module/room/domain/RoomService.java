@@ -13,5 +13,6 @@ public interface RoomService {
     Room findByCode(String code);
     void update(String ownerId, Room room);
     void updateStatus(String id, String ownerId, String quizId, RoomStatus status);
+    void markAsReviewed(String id, String ownerId, String quizId);
     void delete(String id, String ownerId, String quizId);
 }

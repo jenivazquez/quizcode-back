@@ -11,9 +11,9 @@ public class SavedRoom {
 
     private final Room room;
 
-    public SavedRoom(String id, String name, String description, String code, RoomStatus status, String quizId, Instant createdAt, Instant startedAt, Instant finishedAt) {
+    public SavedRoom(String id, String name, String description, String code, RoomStatus status, String quizId, Instant createdAt, Instant startedAt, Instant finishedAt, Boolean reviewed) {
         validate(id, name, description, status, quizId, createdAt);
-        this.room = new Room(id, name, description, code, status, quizId, createdAt, startedAt, finishedAt);
+        this.room = new Room(id, name, description, code, status, quizId, createdAt, startedAt, finishedAt, reviewed);
     }
 
     private void validate(String id, String name, String description, RoomStatus status, String quizId, Instant createdAt) {

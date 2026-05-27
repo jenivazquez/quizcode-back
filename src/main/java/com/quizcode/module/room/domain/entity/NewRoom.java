@@ -14,7 +14,7 @@ public class NewRoom {
 
     public NewRoom(String name, String description, String quizId) {
         validate(name, description, quizId);
-        this.room = new Room(null, name, description, null, RoomStatus.CREATED, quizId, Instant.now(), null, null);
+        this.room = new Room(null, name, description, null, RoomStatus.CREATED, quizId, Instant.now(), null, null, false);
     }
 
     private void validate(String name, String description, String quizId) {

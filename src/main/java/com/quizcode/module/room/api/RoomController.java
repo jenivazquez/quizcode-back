@@ -72,6 +72,13 @@ public class RoomController {
         roomService.updateStatus(id, ownerId, quizId, request.getStatus());
     }
 
+    @PatchMapping(path = "/user/{ownerId}/quiz/{quizId}/room/{id}/reviewed")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void markAsReviewed(@PathVariable String ownerId, @PathVariable String quizId, @PathVariable String id) {
+        SecurityUtil.checkAuthorized(ownerId);
+        roomService.markAsReviewed(id, ownerId, quizId);
+    }
+
     @DeleteMapping(path = "/user/{ownerId}/quiz/{quizId}/room/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable String ownerId, @PathVariable String quizId, @PathVariable String id) {

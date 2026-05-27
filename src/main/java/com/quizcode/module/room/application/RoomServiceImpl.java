@@ -71,6 +71,13 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public void markAsReviewed(String id, String ownerId, String quizId) {
+        Room savedRoom = roomRepository.findById(id).orElseThrow(() -> new NotFoundExceptionCustom("La sala no existe"));
+        roomValidator.validateToMarkAsReviewed(savedRoom, ownerId, quizId);
+        roomRepository.markAsReviewed(id);
+    }
+
+    @Override
     public void delete(String id, String ownerId, String quizId) {
         roomValidator.validateToDelete(id, ownerId, quizId);
         roomRepository.delete(id);

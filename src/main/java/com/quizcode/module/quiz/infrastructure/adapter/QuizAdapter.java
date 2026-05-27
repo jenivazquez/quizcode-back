@@ -1,5 +1,6 @@
 package com.quizcode.module.quiz.infrastructure.adapter;
 
+import com.quizcode.module.participation.domain.ParticipationToQuizPort;
 import com.quizcode.module.question.domain.QuestionToQuizPort;
 import com.quizcode.module.quiz.domain.QuizAdapterService;
 import com.quizcode.module.quiz.domain.entity.Quiz;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class QuizAdapter implements QuestionToQuizPort, RoomToQuizPort {
+public class QuizAdapter implements QuestionToQuizPort, RoomToQuizPort, ParticipationToQuizPort {
 
     private final QuizAdapterService quizAdapterService;
 

@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 public interface RoomMongoMapper {
 
     default Room roomDocumentToRoom(RoomDocument doc) {
-        return new SavedRoom(doc.getId(), doc.getName(), doc.getDescription(), doc.getCode(), doc.getStatus(), doc.getQuizId(), doc.getCreatedAt(), doc.getStartedAt(), doc.getFinishedAt()).getRoom();
+        return new SavedRoom(doc.getId(), doc.getName(), doc.getDescription(), doc.getCode(), doc.getStatus(), doc.getQuizId(), doc.getCreatedAt(), doc.getStartedAt(), doc.getFinishedAt(), doc.getReviewed()).getRoom();
     }
 
     RoomDocument roomToRoomDocument(Room room);

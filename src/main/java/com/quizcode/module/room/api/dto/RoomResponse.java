@@ -20,4 +20,5 @@ public class RoomResponse {
     private Instant createdAt;
     private Instant startedAt;
     private Instant finishedAt;
+    private Boolean reviewed;
 }
