@@ -18,11 +18,6 @@ public class ParticipationQuestionAdapter implements ParticipationToQuestionPort
     }
 
     @Override
-    public boolean questionBelongsToQuiz(String questionId, String quizId) {
-        return questionAdapterService.existsByQuizIdAndId(quizId, questionId);
-    }
-
-    @Override
     public List<QuestionSummary> findByQuizId(String quizId) {
         return questionAdapterService.findByQuizId(quizId).stream()
                 .map(question -> new QuestionSummary(

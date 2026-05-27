@@ -3,7 +3,6 @@ package com.quizcode.module.room.infrastructure.mongo;
 import com.quizcode.module.room.domain.RoomRepository;
 import com.quizcode.module.room.domain.entity.Room;
 import com.quizcode.module.room.domain.entity.RoomStatus;
-import com.quizcode.module.room.infrastructure.mongo.document.RoomDocument;
 import com.quizcode.module.room.infrastructure.mongo.mapper.RoomMongoMapper;
 import com.quizcode.module.room.infrastructure.mongo.persistence.RoomMongoRepository;
 import org.springframework.stereotype.Repository;

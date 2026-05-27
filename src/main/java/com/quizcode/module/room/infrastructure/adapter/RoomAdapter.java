@@ -25,11 +25,6 @@ public class RoomAdapter implements QuizToRoomPort, ParticipationToRoomPort {
     }
 
     @Override
-    public boolean roomExists(String roomId) {
-        return roomAdapterService.roomExists(roomId);
-    }
-
-    @Override
     public boolean isRoomOpened(String roomId) {
         return roomAdapterService.isRoomOpened(roomId);
     }
@@ -37,11 +32,6 @@ public class RoomAdapter implements QuizToRoomPort, ParticipationToRoomPort {
     @Override
     public boolean isRoomCreated(String roomId) {
         return roomAdapterService.isRoomCreated(roomId);
-    }
-
-    @Override
-    public boolean isRoomClosed(String roomId) {
-        return roomAdapterService.isRoomClosed(roomId);
     }
 
     @Override

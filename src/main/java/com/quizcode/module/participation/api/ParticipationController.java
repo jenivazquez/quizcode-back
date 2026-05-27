@@ -9,7 +9,6 @@ import com.quizcode.module.participation.api.dto.participation.ParticipationResp
 import com.quizcode.module.participation.api.mapper.ParticipationMapper;
 import com.quizcode.module.participation.domain.ParticipationService;
 import com.quizcode.module.participation.domain.entity.answer.Answer;
-import com.quizcode.module.participation.domain.entity.answer.ReviewedAnswer;
 import com.quizcode.shared.SecurityUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;

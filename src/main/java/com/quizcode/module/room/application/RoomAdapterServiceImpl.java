@@ -31,11 +31,6 @@ public class RoomAdapterServiceImpl implements RoomAdapterService {
     }
 
     @Override
-    public boolean roomExists(String roomId) {
-        return roomRepository.findById(roomId).isPresent();
-    }
-
-    @Override
     public boolean isRoomOpened(String roomId) {
         return findOrThrow(roomId).getStatus() == RoomStatus.OPENED;
     }
@@ -43,11 +38,6 @@ public class RoomAdapterServiceImpl implements RoomAdapterService {
     @Override
     public boolean isRoomCreated(String roomId) {
         return findOrThrow(roomId).getStatus() == RoomStatus.CREATED;
-    }
-
-    @Override
-    public boolean isRoomClosed(String roomId) {
-        return findOrThrow(roomId).getStatus() == RoomStatus.CLOSED;
     }
 
     @Override
