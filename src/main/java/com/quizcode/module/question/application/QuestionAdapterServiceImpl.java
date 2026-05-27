@@ -31,8 +31,4 @@ public class QuestionAdapterServiceImpl implements QuestionAdapterService {
         return questionRepository.findByQuizId(quizId);
     }
 
-    @Override
-    public boolean existsByQuizIdAndId(String quizId, String questionId) {
-        return questionRepository.existsByQuizIdAndId(quizId, questionId);
-    }
 }
