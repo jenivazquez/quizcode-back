@@ -8,11 +8,14 @@ import com.quizcode.module.room.domain.RoomRepository;
 import com.quizcode.module.room.domain.RoomService;
 import com.quizcode.module.room.domain.entity.Room;
 import com.quizcode.module.room.domain.entity.RoomStatus;
+import com.quizcode.module.room.domain.entity.QuizRoom;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -54,9 +57,14 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<Room> findByOwnerId(String ownerId) {
-        List<String> quizIds = quizPort.findQuizzesByOwner(ownerId);
-        return (quizIds.isEmpty()) ? List.of() : roomRepository.findByQuizIds(quizIds);
+    public List<QuizRoom> findByOwnerId(String ownerId) {
+        Map<String, String> quizzes = quizPort.findQuizTitlesByOwner(ownerId);
+        return quizzes.isEmpty()
+                ? List.of()
+                : roomRepository.findByQuizIds(quizzes.keySet().stream().toList())
+                    .stream()
+                    .map(room -> new QuizRoom(room, quizzes.get(room.getQuizId())))
+                    .toList();
     }
 
     @Override

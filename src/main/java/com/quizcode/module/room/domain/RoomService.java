@@ -1,5 +1,6 @@
 package com.quizcode.module.room.domain;
 
+import com.quizcode.module.room.domain.entity.QuizRoom;
 import com.quizcode.module.room.domain.entity.Room;
 import com.quizcode.module.room.domain.entity.RoomStatus;
 
@@ -9,7 +10,7 @@ public interface RoomService {
     String create(String ownerId, Room room);
     Room findById(String id, String ownerId, String quizId);
     List<Room> findByQuizId(String ownerId, String quizId);
-    List<Room> findByOwnerId(String ownerId);
+    List<QuizRoom> findByOwnerId(String ownerId);
     Room findByCode(String code);
     void update(String ownerId, Room room);
     void updateStatus(String id, String ownerId, String quizId, RoomStatus status);

@@ -2,6 +2,7 @@ package com.quizcode.module.room.api;
 
 import com.quizcode.module.room.api.dto.CreateRoomRequest;
 import com.quizcode.module.room.api.dto.IdRoomResponse;
+import com.quizcode.module.room.api.dto.QuizRoomResponse;
 import com.quizcode.module.room.api.dto.RoomResponse;
 import com.quizcode.module.room.api.dto.UpdateRoomRequest;
 import com.quizcode.module.room.api.dto.UpdateRoomStatusRequest;
@@ -44,10 +45,10 @@ public class RoomController {
 
     @GetMapping(path = "/user/{ownerId}/room")
     @ResponseStatus(HttpStatus.OK)
-    public List<RoomResponse> findByOwnerId(@PathVariable String ownerId) {
+    public List<QuizRoomResponse> findByOwnerId(@PathVariable String ownerId) {
         SecurityUtil.checkAuthorized(ownerId);
         return roomService.findByOwnerId(ownerId).stream()
-                .map(roomMapper::roomToRoomResponse)
+                .map(roomMapper::quizRoomToQuizRoomResponse)
                 .toList();
     }
 

@@ -7,7 +7,8 @@ import com.quizcode.module.quiz.domain.entity.Quiz;
 import com.quizcode.module.room.domain.RoomToQuizPort;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class QuizAdapter implements QuestionToQuizPort, RoomToQuizPort, ParticipationToQuizPort {
@@ -49,9 +50,8 @@ public class QuizAdapter implements QuestionToQuizPort, RoomToQuizPort, Particip
     }
 
     @Override
-    public List<String> findQuizzesByOwner(String ownerId) {
+    public Map<String, String> findQuizTitlesByOwner(String ownerId) {
         return quizAdapterService.findByOwnerId(ownerId).stream()
-                .map(Quiz::getId)
-                .toList();
+                .collect(Collectors.toMap(Quiz::getId, Quiz::getTitle));
     }
 }
