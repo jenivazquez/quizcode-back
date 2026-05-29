@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,16 +43,19 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room findById(String id, String ownerId, String quizId) {
+    public QuizRoom findById(String id, String ownerId, String quizId) {
         Room room = roomRepository.findById(id).orElseThrow(() -> new NotFoundExceptionCustom("La sala no existe"));
         roomValidator.validateToFindById(room, ownerId, quizId);
-        return room;
+        return new QuizRoom(room, quizPort.findQuizTitleById(quizId));
     }
 
     @Override
-    public List<Room> findByQuizId(String ownerId, String quizId) {
+    public List<QuizRoom> findByQuizId(String ownerId, String quizId) {
         roomValidator.validateToFindByQuizId(ownerId, quizId);
-        return roomRepository.findByQuizId(quizId);
+        String quizTitle = quizPort.findQuizTitleById(quizId);
+        return roomRepository.findByQuizId(quizId).stream()
+                .map(room -> new QuizRoom(room, quizTitle))
+                .toList();
     }
 
     @Override

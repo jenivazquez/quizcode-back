@@ -35,7 +35,7 @@ public class Room {
     }
 
     public boolean isEditable() {
-        return status == RoomStatus.CREATED;
+        return status != RoomStatus.CLOSED;
     }
 
     private void validate() {

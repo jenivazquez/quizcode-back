@@ -116,7 +116,7 @@ public class RoomValidator {
 
     private void checkRoomEditable(Room room) {
         if (!room.isEditable()) {
-            throw new InvalidStatusExceptionCustom("No puedes modificar una sala que ya está abierta");
+            throw new InvalidStatusExceptionCustom("No puedes modificar una sala cerrada");
         }
     }
 

@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface RoomService {
     String create(String ownerId, Room room);
-    Room findById(String id, String ownerId, String quizId);
-    List<Room> findByQuizId(String ownerId, String quizId);
+    QuizRoom findById(String id, String ownerId, String quizId);
+    List<QuizRoom> findByQuizId(String ownerId, String quizId);
     List<QuizRoom> findByOwnerId(String ownerId);
     Room findByCode(String code);
     void update(String ownerId, Room room);

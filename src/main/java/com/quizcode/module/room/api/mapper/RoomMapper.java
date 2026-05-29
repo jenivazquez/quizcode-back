@@ -31,6 +31,4 @@ public interface RoomMapper {
         response.setQuizTitle(quizRoom.quizTitle());
         return response;
     }
-
-    IdRoomResponse roomToIdRoomResponse(Room room);
 }

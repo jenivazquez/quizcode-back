@@ -36,10 +36,10 @@ public class RoomController {
 
     @GetMapping(path = "/user/{ownerId}/quiz/{quizId}/room")
     @ResponseStatus(HttpStatus.OK)
-    public List<RoomResponse> findByQuizId(@PathVariable String ownerId, @PathVariable String quizId) {
+    public List<QuizRoomResponse> findByQuizId(@PathVariable String ownerId, @PathVariable String quizId) {
         SecurityUtil.checkAuthorized(ownerId);
         return roomService.findByQuizId(ownerId, quizId).stream()
-                .map(roomMapper::roomToRoomResponse)
+                .map(roomMapper::quizRoomToQuizRoomResponse)
                 .toList();
     }
 
@@ -54,9 +54,9 @@ public class RoomController {
 
     @GetMapping(path = "/user/{ownerId}/quiz/{quizId}/room/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public RoomResponse findById(@PathVariable String ownerId, @PathVariable String quizId, @PathVariable String id) {
+    public QuizRoomResponse findById(@PathVariable String ownerId, @PathVariable String quizId, @PathVariable String id) {
         SecurityUtil.checkAuthorized(ownerId);
-        return roomMapper.roomToRoomResponse(roomService.findById(id, ownerId, quizId));
+        return roomMapper.quizRoomToQuizRoomResponse(roomService.findById(id, ownerId, quizId));
     }
 
     @PatchMapping(path = "/user/{ownerId}/quiz/{quizId}/room/{id}")

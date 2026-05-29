@@ -50,6 +50,11 @@ public class QuizAdapter implements QuestionToQuizPort, RoomToQuizPort, Particip
     }
 
     @Override
+    public String findQuizTitleById(String quizId) {
+        return quizAdapterService.findById(quizId).getTitle();
+    }
+
+    @Override
     public Map<String, String> findQuizTitlesByOwner(String ownerId) {
         return quizAdapterService.findByOwnerId(ownerId).stream()
                 .collect(Collectors.toMap(Quiz::getId, Quiz::getTitle));
