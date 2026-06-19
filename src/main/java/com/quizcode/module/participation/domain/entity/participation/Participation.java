@@ -41,8 +41,9 @@ public class Participation {
         validate();
     }
 
-    public void calculateTotalTime(Instant startedAt) {
-        this.totalTime = Duration.between(startedAt, this.finishedAt).toSeconds();
+    public void calculateTotalTime(Instant startedAt, Integer timeLimitSeconds) {
+        long elapsed = Duration.between(startedAt, this.finishedAt).toSeconds();
+        this.totalTime = timeLimitSeconds != null ? Math.min(elapsed, timeLimitSeconds) : elapsed;
     }
 
     private void validate() {

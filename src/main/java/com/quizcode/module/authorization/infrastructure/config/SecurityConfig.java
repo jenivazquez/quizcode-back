@@ -34,9 +34,11 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/api/v1/user").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/token").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/room/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/room/code/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/quiz/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/quiz/*/question").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/quiz/*/question/review").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/room/*/participation").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/room/*/participation/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/room/*/participation").permitAll()

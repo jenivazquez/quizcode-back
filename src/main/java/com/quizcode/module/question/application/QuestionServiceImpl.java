@@ -32,8 +32,14 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<Question> findByQuizIdToAnswer(String quizId) {
-        questionValidator.validateToFindByQuizIdToAnswer(quizId);
+    public List<Question> findByQuizIdToAnswer(String quizId, String participationId) {
+        questionValidator.validateToFindByQuizIdToAnswer(participationId);
+        return questionRepository.findByQuizId(quizId);
+    }
+
+    @Override
+    public List<Question> findByQuizIdToReview(String quizId, String participationId) {
+        questionValidator.validateToFindByQuizIdToReview(participationId);
         return questionRepository.findByQuizId(quizId);
     }
 

@@ -4,6 +4,7 @@ import com.quizcode.module.participation.api.dto.answer.AnswerReviewRequest;
 import com.quizcode.module.participation.api.dto.answer.AnswerRequest;
 import com.quizcode.module.participation.api.dto.participation.ParticipationRequest;
 import com.quizcode.module.participation.api.dto.participation.IdParticipationResponse;
+import com.quizcode.module.participation.api.dto.participation.LoginParticipationResponse;
 import com.quizcode.module.participation.api.dto.participation.PartRankingResponse;
 import com.quizcode.module.participation.api.dto.participation.ParticipationResponse;
 import com.quizcode.module.participation.api.mapper.ParticipationMapper;
@@ -44,8 +45,8 @@ public class ParticipationController {
 
     @PostMapping(path = "/room/{roomId}/participation/login")
     @ResponseStatus(HttpStatus.OK)
-    public IdParticipationResponse login(@PathVariable String roomId, @RequestBody ParticipationRequest request) {
-        return new IdParticipationResponse(participationService.login(roomId, request.getUsername(), request.getPassword()));
+    public LoginParticipationResponse login(@PathVariable String roomId, @RequestBody ParticipationRequest request) {
+        return participationMapper.participationToLoginParticipationResponse(participationService.login(roomId, request.getUsername(), request.getPassword()));
     }
 
     @GetMapping(path = "/room/{roomId}/participation/{id}")

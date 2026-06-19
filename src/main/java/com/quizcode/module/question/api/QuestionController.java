@@ -57,9 +57,17 @@ public class QuestionController {
 
     @GetMapping(path = "/quiz/{quizId}/question")
     @ResponseStatus(HttpStatus.OK)
-    public List<QuestionToAnswerResponse> findByQuizIdToAnswer(@PathVariable String quizId) {
-        return questionService.findByQuizIdToAnswer(quizId).stream()
+    public List<QuestionToAnswerResponse> findByQuizIdToAnswer(@PathVariable String quizId, @RequestParam String partId) {
+        return questionService.findByQuizIdToAnswer(quizId, partId).stream()
                 .map(questionMapper::questionToQuestionToAnswerResponse)
+                .toList();
+    }
+
+    @GetMapping(path = "/quiz/{quizId}/question/review")
+    @ResponseStatus(HttpStatus.OK)
+    public List<QuestionResponse> findByQuizIdToReview(@PathVariable String quizId, @RequestParam String partId) {
+        return questionService.findByQuizIdToReview(quizId, partId).stream()
+                .map(questionMapper::questionToQuestionResponse)
                 .toList();
     }
 }

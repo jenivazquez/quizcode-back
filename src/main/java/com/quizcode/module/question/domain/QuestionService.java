@@ -7,7 +7,8 @@ import java.util.List;
 public interface QuestionService {
     String create(String ownerId, Question question);
     List<Question> findByQuizId(String ownerId, String quizId);
-    List<Question> findByQuizIdToAnswer(String quizId);
+    List<Question> findByQuizIdToAnswer(String quizId, String participationId);
+    List<Question> findByQuizIdToReview(String quizId, String participationId);
     void update(String ownerId, Question question);
     void delete(String ownerId, String quizId, String id);
 }

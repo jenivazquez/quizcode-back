@@ -10,8 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig {
 
-    // Configurable via env var CORS_ALLOWED_ORIGINS (separar múltiples orígenes con coma)
-    // Spring mapea CORS_ALLOWED_ORIGINS → cors.allowed-origins por relaxed binding
     @Value("${cors.allowed-origins:http://localhost:5173}")
     private String allowedOrigins;
 

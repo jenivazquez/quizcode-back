@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ParticipationService {
     String create(Participation participation);
-    String login(String roomId, String username, String password);
+    Participation login(String roomId, String username, String password);
     Participation findById(String roomId, String participationId);
     void submitAnswers(Participation participation);
     List<Participation> findByRoomIdToRanking(String roomId);

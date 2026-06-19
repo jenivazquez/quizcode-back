@@ -87,6 +87,12 @@ public class RoomController {
         roomService.delete(id, ownerId, quizId);
     }
 
+    @GetMapping(path = "/room/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public RoomResponse findByIdAsParticipant(@PathVariable String id) {
+        return roomMapper.roomToRoomResponse(roomService.findByIdAsParticipant(id));
+    }
+
     @GetMapping(path = "/room/code/{code}")
     @ResponseStatus(HttpStatus.OK)
     public RoomResponse findByCode(@PathVariable String code) {

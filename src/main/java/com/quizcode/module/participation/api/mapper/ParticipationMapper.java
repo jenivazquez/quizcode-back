@@ -3,6 +3,7 @@ package com.quizcode.module.participation.api.mapper;
 import com.quizcode.module.participation.api.dto.answer.AnswerReviewRequest;
 import com.quizcode.module.participation.api.dto.answer.AnswerRequest;
 import com.quizcode.module.participation.api.dto.answer.AnswerResponse;
+import com.quizcode.module.participation.api.dto.participation.LoginParticipationResponse;
 import com.quizcode.module.participation.api.dto.participation.ParticipationRequest;
 import com.quizcode.module.participation.api.dto.participation.PartRankingResponse;
 import com.quizcode.module.participation.api.dto.participation.ParticipationResponse;
@@ -36,8 +37,12 @@ public class ParticipationMapper {
                 participation.getStartedAt(), participation.getFinishedAt(), participation.getTotalScore(), participation.getTotalTime(), answerResponses);
     }
 
+    public LoginParticipationResponse participationToLoginParticipationResponse(Participation participation) {
+        return new LoginParticipationResponse(participation.getId(), participation.getStatus());
+    }
+
     public PartRankingResponse participationToPartRankingResponse(Participation participation) {
-        return new PartRankingResponse(participation.getUsername(), participation.getTotalScore(), participation.getTotalTime());
+        return new PartRankingResponse(participation.getUsername(), participation.getReviewStatus(), participation.getTotalScore(), participation.getTotalTime());
     }
 
     public Participation answerRequestsToParticipation(String id, String roomId, List<AnswerRequest> requests) {

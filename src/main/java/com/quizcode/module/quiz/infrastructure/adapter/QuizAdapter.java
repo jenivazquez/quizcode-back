@@ -25,6 +25,12 @@ public class QuizAdapter implements QuestionToQuizPort, RoomToQuizPort, Particip
     }
 
     @Override
+    public Integer getTimeLimit(String quizId) {
+        Quiz quiz = quizAdapterService.findById(quizId);
+        return Boolean.TRUE.equals(quiz.getHasLimit()) ? quiz.getLimitMinutes() * 60 : null;
+    }
+
+    @Override
     public boolean isQuizEditable(String quizId, String ownerId) {
         return quizAdapterService.findByIdAndOwnerId(quizId, ownerId).isEditable();
     }

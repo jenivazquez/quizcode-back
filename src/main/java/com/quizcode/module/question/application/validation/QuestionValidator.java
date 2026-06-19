@@ -4,6 +4,7 @@ import com.quizcode.error.exception.InvalidDataExceptionCustom;
 import com.quizcode.error.exception.InvalidStatusExceptionCustom;
 import com.quizcode.error.exception.NotFoundExceptionCustom;
 import com.quizcode.module.question.domain.QuestionRepository;
+import com.quizcode.module.question.domain.QuestionToParticipationPort;
 import com.quizcode.module.question.domain.entity.question.Question;
 import com.quizcode.module.question.domain.QuestionToQuizPort;
 import org.springframework.stereotype.Component;
@@ -13,10 +14,12 @@ public class QuestionValidator {
 
     private final QuestionRepository questionRepository;
     private final QuestionToQuizPort quizPort;
+    private final QuestionToParticipationPort participationPort;
 
-    public QuestionValidator(QuestionRepository questionRepository, QuestionToQuizPort quizPort) {
+    public QuestionValidator(QuestionRepository questionRepository, QuestionToQuizPort quizPort, QuestionToParticipationPort participationPort) {
         this.questionRepository = questionRepository;
         this.quizPort = quizPort;
+        this.participationPort = participationPort;
     }
 
     public void validateToCreate(String ownerId, Question newQuestion) {
@@ -28,9 +31,15 @@ public class QuestionValidator {
         quizPort.checkQuizExistByOwner(quizId, ownerId);
     }
 
-    public void validateToFindByQuizIdToAnswer(String quizId) {
-        if (!quizPort.isAnswerAllowedByQuiz(quizId)) {
-            throw new InvalidStatusExceptionCustom("Este cuestionario no permite respuestas");
+    public void validateToFindByQuizIdToAnswer(String participationId) {
+        if (!participationPort.isParticipationStarted(participationId)) {
+            throw new InvalidStatusExceptionCustom("La participación no está activa");
+        }
+    }
+
+    public void validateToFindByQuizIdToReview(String participationId) {
+        if (!participationPort.isParticipationFinished(participationId)) {
+            throw new InvalidStatusExceptionCustom("La participación no está finalizada. No puedes obtener la lista de preguntas con sus respuestas correctas.");
         }
     }
 

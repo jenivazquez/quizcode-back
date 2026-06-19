@@ -6,6 +6,7 @@ import com.quizcode.module.participation.application.validation.ParticipationVal
 import com.quizcode.module.participation.domain.ParticipationRepository;
 import com.quizcode.module.participation.domain.ParticipationService;
 import com.quizcode.module.participation.domain.ParticipationToQuestionPort;
+import com.quizcode.module.participation.domain.ParticipationToQuizPort;
 import com.quizcode.module.participation.domain.ParticipationToRoomPort;
 import com.quizcode.module.participation.domain.entity.answer.ReviewedAnswer;
 import com.quizcode.module.participation.domain.entity.question.QuestionSummary;
@@ -25,12 +26,14 @@ public class ParticipationServiceImpl implements ParticipationService {
     private final ParticipationValidator partValidator;
     private final ParticipationToRoomPort roomPort;
     private final ParticipationToQuestionPort questionPort;
+    private final ParticipationToQuizPort quizPort;
 
-    public ParticipationServiceImpl(ParticipationRepository partRepository, ParticipationValidator partValidator, ParticipationToRoomPort roomPort, ParticipationToQuestionPort questionPort) {
+    public ParticipationServiceImpl(ParticipationRepository partRepository, ParticipationValidator partValidator, ParticipationToRoomPort roomPort, ParticipationToQuestionPort questionPort, ParticipationToQuizPort quizPort) {
         this.partRepository = partRepository;
         this.partValidator = partValidator;
         this.roomPort = roomPort;
         this.questionPort = questionPort;
+        this.quizPort = quizPort;
     }
 
     @Override
@@ -40,11 +43,11 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
-    public String login(String roomId, String username, String password) {
+    public Participation login(String roomId, String username, String password) {
         if (Util.isNull(username) || Util.isNull(password)) throw new InvalidDataExceptionCustom("El nombre de usuario y la contraseña son obligatorios");
         Participation savedPart = partRepository.findByRoomIdAndUsername(roomId, username).orElseThrow(() -> new NotFoundExceptionCustom("El usuario no existe en esta sala"));
         partValidator.validateToLogin(savedPart, password);
-        return savedPart.getId();
+        return savedPart;
     }
 
     @Override
@@ -57,9 +60,10 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     public void submitAnswers(Participation participation) {
         Participation savedPart = partRepository.findById(participation.getId()).orElseThrow(() -> new NotFoundExceptionCustom("La participación no existe"));
-        List<QuestionSummary> questions = questionPort.findByQuizId(roomPort.getQuizIdByRoom(participation.getRoomId()));
+        String quizId = roomPort.getQuizIdByRoom(participation.getRoomId());
+        List<QuestionSummary> questions = questionPort.findByQuizId(quizId);
         partValidator.validateToSubmitAnswers(savedPart, participation, questions);
-        participation.calculateTotalTime(savedPart.getStartedAt());
+        participation.calculateTotalTime(savedPart.getStartedAt(), quizPort.getTimeLimit(quizId));
         partRepository.update(participation);
         autoReviewAnswers(participation.getId(), participation.getAnswers(), questions);
     }

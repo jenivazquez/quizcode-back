@@ -165,20 +165,10 @@ public class ParticipationValidator {
         for (Answer answer : answers) {
             String type = questionMap.get(answer.getQuestionId()).getType();
             if ("EDIT_CODE".equals(type)) {
-                if (Util.isNull(answer.getWrittenAnswer())) {
-                    throw new InvalidDataExceptionCustom("La pregunta de tipo código requiere una respuesta escrita");
-                }
-                if (!Util.isNull(answer.getCodeOptions())) {
-                    throw new InvalidDataExceptionCustom("La pregunta de tipo código no admite opciones");
-                }
+                if (!Util.isNull(answer.getCodeOptions())) throw new InvalidDataExceptionCustom("La pregunta de tipo código no admite opciones");
             } else {
-                if (Util.isNull(answer.getCodeOptions())) {
-                    throw new InvalidDataExceptionCustom("La pregunta de tipo opción requiere al menos una opción seleccionada");
-                }
-                if (!Util.isNull(answer.getWrittenAnswer())) {
-                    throw new InvalidDataExceptionCustom("La pregunta de tipo opción no admite respuesta escrita");
-                }
-                if ("SINGLE_CHOICE".equals(type) && answer.getCodeOptions().size() != 1) {
+                if (!Util.isNull(answer.getWrittenAnswer())) throw new InvalidDataExceptionCustom("La pregunta de tipo opción no admite respuesta escrita");
+                if (!Util.isNull(answer.getCodeOptions()) && "SINGLE_CHOICE".equals(type) && answer.getCodeOptions().size() != 1) {
                     throw new InvalidDataExceptionCustom("La pregunta de opción simple requiere exactamente una opción seleccionada");
                 }
             }

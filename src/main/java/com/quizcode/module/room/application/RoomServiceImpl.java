@@ -75,6 +75,11 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public Room findByIdAsParticipant(String id) {
+        return roomRepository.findById(id).orElseThrow(() -> new NotFoundExceptionCustom("La sala no existe"));
+    }
+
+    @Override
     public void update(String ownerId, Room room) {
         roomValidator.validateToUpdate(ownerId, room);
         roomRepository.update(room);
