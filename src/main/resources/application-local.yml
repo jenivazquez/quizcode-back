@@ -1,8 +1,0 @@
-spring:
-  application:
-    name: quizcode-local
-  mongodb:
-    uri: mongodb://admin:admin123@localhost:27017/quizcode?authSource=admin
-    database: quizcode
-jwt:
-  secret: QuizCodeSecretKeyFor256BitEncryption1234
