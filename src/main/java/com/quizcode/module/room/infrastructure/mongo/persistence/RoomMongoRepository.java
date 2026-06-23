@@ -41,8 +41,8 @@ public interface RoomMongoRepository extends MongoRepository<RoomDocument, Strin
     void updateStatus(String id, RoomStatus status);
 
     @Query("{ '_id': ?0 }")
-    @Update("{ '$set': { 'status': ?1, 'code': ?2, 'finishedAt': ?3 } }")
-    void closeRoom(String id, RoomStatus status, String code, Instant finishedAt);
+    @Update("{ '$set': { 'status': ?1, 'finishedAt': ?2 } }")
+    void closeRoom(String id, RoomStatus status, Instant finishedAt);
 
     @Query("{ '_id': ?0 }")
     @Update("{ '$set': { 'reviewed': true } }")

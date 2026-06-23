@@ -73,7 +73,7 @@ public class RoomRepositoryImpl implements RoomRepository {
 
     @Override
     public void closeRoom(String id, Instant finishedAt) {
-        roomMongoRepository.closeRoom(id, RoomStatus.CLOSED, null, finishedAt);
+        roomMongoRepository.closeRoom(id, RoomStatus.CLOSED, finishedAt);
     }
 
     @Override

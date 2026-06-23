@@ -111,7 +111,10 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     public List<Participation> findByRoomIdAsRoomOwner(String ownerId, String quizId, String roomId) {
         partValidator.validateToFindPartsAsRoomOwner(ownerId, quizId, roomId);
-        return partRepository.findByRoomId(roomId);
+        return partRepository.findByRoomId(roomId).stream()
+                .sorted(Comparator.comparing(Participation::getTotalScore, Comparator.nullsLast(Comparator.reverseOrder()))
+                        .thenComparing(Participation::getTotalTime, Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
     }
 
     @Override

@@ -89,8 +89,8 @@ public class RoomController {
 
     @GetMapping(path = "/room/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public RoomResponse findByIdAsParticipant(@PathVariable String id) {
-        return roomMapper.roomToRoomResponse(roomService.findByIdAsParticipant(id));
+    public QuizRoomResponse findByIdAsParticipant(@PathVariable String id) {
+        return roomMapper.quizRoomToQuizRoomResponse(roomService.findByIdAsParticipant(id));
     }
 
     @GetMapping(path = "/room/code/{code}")

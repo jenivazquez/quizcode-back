@@ -12,7 +12,7 @@ public interface RoomService {
     List<QuizRoom> findByQuizId(String ownerId, String quizId);
     List<QuizRoom> findByOwnerId(String ownerId);
     Room findByCode(String code);
-    Room findByIdAsParticipant(String id);
+    QuizRoom findByIdAsParticipant(String id);
     void update(String ownerId, Room room);
     void updateStatus(String id, String ownerId, String quizId, RoomStatus status);
     void markAsReviewed(String id, String ownerId, String quizId);

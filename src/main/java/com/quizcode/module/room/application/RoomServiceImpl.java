@@ -75,8 +75,9 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room findByIdAsParticipant(String id) {
-        return roomRepository.findById(id).orElseThrow(() -> new NotFoundExceptionCustom("La sala no existe"));
+    public QuizRoom findByIdAsParticipant(String id) {
+        Room room = roomRepository.findById(id).orElseThrow(() -> new NotFoundExceptionCustom("La sala no existe"));
+        return new QuizRoom(room, quizPort.findQuizTitleById(room.getQuizId()));
     }
 
     @Override
