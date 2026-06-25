@@ -9,6 +9,7 @@ import com.quizcode.module.participation.domain.ParticipationRepository;
 import com.quizcode.module.participation.domain.ParticipationToQuizPort;
 import com.quizcode.module.participation.domain.ParticipationToRoomPort;
 import com.quizcode.module.participation.domain.entity.question.QuestionSummary;
+import com.quizcode.module.participation.domain.entity.question.QuestionType;
 import com.quizcode.module.participation.domain.entity.answer.Answer;
 import com.quizcode.module.participation.domain.entity.participation.Participation;
 import com.quizcode.module.participation.domain.entity.status.ParticipationStatus;
@@ -163,12 +164,12 @@ public class ParticipationValidator {
     private void checkAnswerTypes(List<Answer> answers, List<QuestionSummary> questions) {
         Map<String, QuestionSummary> questionMap = questions.stream().collect(Collectors.toMap(QuestionSummary::getId, q -> q));
         for (Answer answer : answers) {
-            String type = questionMap.get(answer.getQuestionId()).getType();
-            if ("EDIT_CODE".equals(type)) {
+            QuestionType type = questionMap.get(answer.getQuestionId()).getType();
+            if (QuestionType.EDIT_CODE == type) {
                 if (!Util.isNull(answer.getCodeOptions())) throw new InvalidDataExceptionCustom("La pregunta de tipo código no admite opciones");
             } else {
                 if (!Util.isNull(answer.getWrittenAnswer())) throw new InvalidDataExceptionCustom("La pregunta de tipo opción no admite respuesta escrita");
-                if (!Util.isNull(answer.getCodeOptions()) && "SINGLE_CHOICE".equals(type) && answer.getCodeOptions().size() != 1) {
+                if (!Util.isNull(answer.getCodeOptions()) && QuestionType.SINGLE_CHOICE == type && answer.getCodeOptions().size() != 1) {
                     throw new InvalidDataExceptionCustom("La pregunta de opción simple requiere exactamente una opción seleccionada");
                 }
             }

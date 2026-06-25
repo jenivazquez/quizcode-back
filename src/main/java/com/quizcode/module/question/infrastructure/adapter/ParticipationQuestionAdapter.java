@@ -2,6 +2,7 @@ package com.quizcode.module.question.infrastructure.adapter;
 
 import com.quizcode.module.participation.domain.ParticipationToQuestionPort;
 import com.quizcode.module.participation.domain.entity.question.QuestionSummary;
+import com.quizcode.module.participation.domain.entity.question.QuestionType;
 import com.quizcode.module.question.domain.QuestionAdapterService;
 import com.quizcode.module.question.domain.entity.option.Option;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,9 @@ public class ParticipationQuestionAdapter implements ParticipationToQuestionPort
         return questionAdapterService.findByQuizId(quizId).stream()
                 .map(question -> new QuestionSummary(
                         question.getId(),
-                        question.getType().name(),
+                        QuestionType.valueOf(question.getType().name()),
+                        question.getStatement(),
+                        question.getBaseCode(),
                         question.getOptions().stream()
                                 .filter(o -> Boolean.TRUE.equals(o.getIsValid()))
                                 .map(Option::getCode)

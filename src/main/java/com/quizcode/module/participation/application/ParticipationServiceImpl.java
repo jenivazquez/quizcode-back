@@ -8,16 +8,15 @@ import com.quizcode.module.participation.domain.ParticipationService;
 import com.quizcode.module.participation.domain.ParticipationToQuestionPort;
 import com.quizcode.module.participation.domain.ParticipationToQuizPort;
 import com.quizcode.module.participation.domain.ParticipationToRoomPort;
-import com.quizcode.module.participation.domain.entity.answer.ReviewedAnswer;
-import com.quizcode.module.participation.domain.entity.question.QuestionSummary;
 import com.quizcode.module.participation.domain.entity.answer.Answer;
+import com.quizcode.module.participation.domain.entity.question.QuestionSummary;
 import com.quizcode.module.participation.domain.entity.participation.Participation;
 import com.quizcode.module.participation.domain.entity.status.ReviewStatus;
 import com.quizcode.shared.Util;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class ParticipationServiceImpl implements ParticipationService {
@@ -27,13 +26,15 @@ public class ParticipationServiceImpl implements ParticipationService {
     private final ParticipationToRoomPort roomPort;
     private final ParticipationToQuestionPort questionPort;
     private final ParticipationToQuizPort quizPort;
+    private final AnswerReviewer answerReviewer;
 
-    public ParticipationServiceImpl(ParticipationRepository partRepository, ParticipationValidator partValidator, ParticipationToRoomPort roomPort, ParticipationToQuestionPort questionPort, ParticipationToQuizPort quizPort) {
+    public ParticipationServiceImpl(ParticipationRepository partRepository, ParticipationValidator partValidator, ParticipationToRoomPort roomPort, ParticipationToQuestionPort questionPort, ParticipationToQuizPort quizPort, AnswerReviewer answerReviewer) {
         this.partRepository = partRepository;
         this.partValidator = partValidator;
         this.roomPort = roomPort;
         this.questionPort = questionPort;
         this.quizPort = quizPort;
+        this.answerReviewer = answerReviewer;
     }
 
     @Override
@@ -65,37 +66,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         partValidator.validateToSubmitAnswers(savedPart, participation, questions);
         participation.calculateTotalTime(savedPart.getStartedAt(), quizPort.getTimeLimit(quizId));
         partRepository.update(participation);
-        autoReviewAnswers(participation.getId(), participation.getAnswers(), questions);
-    }
-
-    private void autoReviewAnswers(String participationId, List<Answer> answers, List<QuestionSummary> questions) {
-        List<Answer> reviewedAnswers = getReviewedAnswers(answers, questions);
-        int totalScore = reviewedAnswers.stream().mapToInt(a -> a.getScore() != null ? a.getScore() : 0).sum();
-        partRepository.updateReviewAnswers(participationId, reviewedAnswers, totalScore, ReviewStatus.IA_REVIEWED);
-    }
-
-    private List<Answer> getReviewedAnswers(List<Answer> submittedAnswers, List<QuestionSummary> questions) {
-        Map<String, QuestionSummary> questionMap = questions.stream().collect(Collectors.toMap(QuestionSummary::getId, q -> q));
-        return submittedAnswers.stream()
-                .map(answer -> getReviewedAnswer(answer, questionMap.get(answer.getQuestionId())))
-                .toList();
-    }
-
-    private Answer getReviewedAnswer(Answer answer, QuestionSummary question) {
-        return "EDIT_CODE".equals(question.getType()) ? reviewCodeAnswer(answer, question) : reviewOptionAnswer(answer, question);
-    }
-
-    private Answer reviewOptionAnswer(Answer answer, QuestionSummary question) {
-        boolean isCorrect = new HashSet<>(question.getValidOptionCodes()).equals(new HashSet<>(answer.getCodeOptions()));
-        int score = isCorrect ? question.getScore() : 0;
-        return new ReviewedAnswer(answer.getQuestionId(), isCorrect, score, null).getAnswer();
-    }
-
-    //TODO: Eliminar esto y llamar en su lugar a la IA
-    private Answer reviewCodeAnswer(Answer answer, QuestionSummary question) {
-        boolean isCorrect = new Random().nextBoolean();
-        int score = new Random().nextInt(0, question.getScore());
-        return new ReviewedAnswer(answer.getQuestionId(), isCorrect, score, "Este el el feedback").getAnswer();
+        answerReviewer.reviewAnswersAsync(participation.getId(), participation.getAnswers(), questions);
     }
 
     @Override

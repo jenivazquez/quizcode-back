@@ -2,9 +2,10 @@ spring:
   application:
     name: quizcode
   profiles:
-    active: local
+    active: local,groq  # cambia 'groq' a 'gemini' para usar Gemini
   mongodb:
     uri: ${MONGO_URI}
     database: ${MONGO_DB}
+
 jwt:
   secret: ${JWT_SECRET}
