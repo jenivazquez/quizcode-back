@@ -80,7 +80,7 @@ public class ParticipationRepositoryImpl implements ParticipationRepository {
 
     @Override
     public boolean existsPendingReviewByRoomId(String roomId) {
-        return partMongoRepository.existsByRoomIdAndReviewStatus(roomId, ReviewStatus.PENDING);
+        return partMongoRepository.existsByRoomIdAndReviewStatusIn(roomId, List.of(ReviewStatus.PENDING, ReviewStatus.IA_FAILED));
     }
 
     @Override

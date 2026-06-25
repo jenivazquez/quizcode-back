@@ -6,7 +6,6 @@ import com.quizcode.module.participation.domain.entity.ai.AIReview;
 import com.quizcode.module.participation.domain.entity.answer.Answer;
 import com.quizcode.module.participation.domain.entity.answer.ReviewedAnswer;
 import com.quizcode.module.participation.domain.entity.question.QuestionSummary;
-import com.quizcode.module.participation.domain.entity.question.QuestionType;
 import com.quizcode.module.participation.domain.entity.status.ReviewStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -33,18 +33,25 @@ public class AnswerReviewer {
 
     @Async
     public void reviewAnswersAsync(String participationId, List<Answer> answers, List<QuestionSummary> questions) {
-        List<Answer> reviewedAnswers = reviewAnswers(answers, questions);
-        int totalScore = reviewedAnswers.stream().mapToInt(a -> a.getScore() != null ? a.getScore() : 0).sum();
-        partRepository.updateReviewAnswers(participationId, reviewedAnswers, totalScore, ReviewStatus.IA_REVIEWED);
-    }
-
-    public List<Answer> reviewAnswers(List<Answer> answers, List<QuestionSummary> questions) {
-        Map<String, QuestionSummary> questionMap = questions.stream().collect(Collectors.toMap(QuestionSummary::getId, q -> q));
-        List<CompletableFuture<Answer>> futures = answers.stream()
-                .map(answer -> CompletableFuture.supplyAsync(() -> reviewAnswer(answer, questionMap.get(answer.getQuestionId())))
-                        .exceptionally(e -> { log.error("Error al corregir la pregunta {}: {}", answer.getQuestionId(), e.getMessage()); return answer; }))
-                .toList();
-        return futures.stream().map(CompletableFuture::join).toList();
+        try {
+            AtomicBoolean hasFailures = new AtomicBoolean(false);
+            Map<String, QuestionSummary> questionMap = questions.stream().collect(Collectors.toMap(QuestionSummary::getId, q -> q));
+            List<CompletableFuture<Answer>> futures = answers.stream()
+                    .map(answer -> CompletableFuture.supplyAsync(() -> reviewAnswer(answer, questionMap.get(answer.getQuestionId())))
+                            .exceptionally(e -> {
+                                hasFailures.set(true);
+                                log.error("Error al corregir la pregunta {}: {}", answer.getQuestionId(), e.getMessage());
+                                return answer;
+                            }))
+                    .toList();
+            List<Answer> reviewedAnswers = futures.stream().map(CompletableFuture::join).toList();
+            ReviewStatus status = hasFailures.get() ? ReviewStatus.IA_FAILED : ReviewStatus.IA_REVIEWED;
+            Integer totalScore = status == ReviewStatus.IA_FAILED ? null : reviewedAnswers.stream().mapToInt(a -> a.getScore() != null ? a.getScore() : 0).sum();
+            partRepository.updateReviewAnswers(participationId, reviewedAnswers, totalScore, status);
+        } catch (Exception e) {
+            log.error("Error inesperado al corregir la participación {}: {}", participationId, e.getMessage());
+            partRepository.updateReviewAnswers(participationId, answers, null, ReviewStatus.IA_FAILED);
+        }
     }
 
     private Answer reviewAnswer(Answer answer, QuestionSummary question) {

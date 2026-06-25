@@ -74,8 +74,8 @@ public class ParticipationServiceImpl implements ParticipationService {
         partValidator.validateToFindRanking(roomId);
         List<Participation> parts = roomPort.isRoomReviewed(roomId) ? partRepository.findFinishedByRoomId(roomId) : partRepository.findReviewedByRoomId(roomId);
         return parts.stream()
-                .sorted(Comparator.comparingInt(Participation::getTotalScore).reversed()
-                        .thenComparingLong(Participation::getTotalTime))
+                .sorted(byReviewStatusGroup().thenComparing(Participation::getTotalScore, Comparator.nullsLast(Comparator.reverseOrder()))
+                        .thenComparing(Participation::getTotalTime, Comparator.nullsLast(Comparator.naturalOrder())))
                 .toList();
     }
 
@@ -83,9 +83,20 @@ public class ParticipationServiceImpl implements ParticipationService {
     public List<Participation> findByRoomIdAsRoomOwner(String ownerId, String quizId, String roomId) {
         partValidator.validateToFindPartsAsRoomOwner(ownerId, quizId, roomId);
         return partRepository.findByRoomId(roomId).stream()
-                .sorted(Comparator.comparing(Participation::getTotalScore, Comparator.nullsLast(Comparator.reverseOrder()))
+                .sorted(byReviewStatusGroup().thenComparing(Participation::getTotalScore, Comparator.nullsLast(Comparator.reverseOrder()))
                         .thenComparing(Participation::getTotalTime, Comparator.nullsLast(Comparator.naturalOrder())))
                 .toList();
+    }
+
+    private Comparator<Participation> byReviewStatusGroup() {
+        return Comparator.comparingInt(p -> {
+            if (p.getReviewStatus() == null) return 0;
+            return switch (p.getReviewStatus()) {
+                case IA_REVIEWED, OWNER_REVIEWED -> 0;
+                case PENDING -> 1;
+                case IA_FAILED -> 2;
+            };
+        });
     }
 
     @Override

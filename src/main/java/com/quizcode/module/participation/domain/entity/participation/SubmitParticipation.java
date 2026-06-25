@@ -18,7 +18,7 @@ public class SubmitParticipation {
 
     public SubmitParticipation(String id, String roomId, List<Answer> answers) {
         validate(id, roomId, answers);
-        this.participation = new Participation(id, roomId, null, null, ParticipationStatus.FINISHED, ReviewStatus.PENDING, null, Instant.now(), 0, null, answers);
+        this.participation = new Participation(id, roomId, null, null, ParticipationStatus.FINISHED, ReviewStatus.PENDING, null, Instant.now(), null, null, answers);
     }
 
     private void validate(String id, String roomId, List<Answer> answers) {

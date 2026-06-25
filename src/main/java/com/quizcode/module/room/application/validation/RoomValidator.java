@@ -104,13 +104,13 @@ public class RoomValidator {
 
     private void checkNoStartedParticipations(String roomId) {
         if (participationPort.hasStartedParticipations(roomId)) {
-            throw new InvalidStatusExceptionCustom("No se puede pausar/cerar la sala porque hay participantes activos");
+            throw new InvalidStatusExceptionCustom("No se puede pausar/cerrar la sala porque hay participantes activos");
         }
     }
 
     private void checkNoPendingParticipations(String roomId) {
         if (participationPort.hasPendingReviews(roomId)) {
-            throw new InvalidStatusExceptionCustom("No se puede marcar la sala como revisada porque hay participaciones pendientes de revisión de la IA");
+            throw new InvalidStatusExceptionCustom("No se puede marcar la sala como revisada porque hay participaciones sin corregir o con error");
         }
     }
 
