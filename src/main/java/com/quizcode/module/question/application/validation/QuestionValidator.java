@@ -5,9 +5,14 @@ import com.quizcode.error.exception.InvalidStatusExceptionCustom;
 import com.quizcode.error.exception.NotFoundExceptionCustom;
 import com.quizcode.module.question.domain.QuestionRepository;
 import com.quizcode.module.question.domain.QuestionToParticipationPort;
+import com.quizcode.module.question.domain.entity.message.AIMessage;
 import com.quizcode.module.question.domain.entity.question.Question;
 import com.quizcode.module.question.domain.QuestionToQuizPort;
+import com.quizcode.shared.ValidatorUtil;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class QuestionValidator {
@@ -51,6 +56,11 @@ public class QuestionValidator {
 
     public void validateToDelete(String ownerId, String quizId, String id) {
         checkQuestionExists(quizId, id);
+        checkQuizEditable(quizId, ownerId);
+    }
+
+    public void validateToGenerate(String ownerId, String quizId, List<AIMessage> messages) {
+        ValidatorUtil.validateFieldsNotNull(Map.of("mensajes", messages));
         checkQuizEditable(quizId, ownerId);
     }
 

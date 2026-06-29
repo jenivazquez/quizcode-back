@@ -3,6 +3,9 @@ package com.quizcode.module.question.application;
 import com.quizcode.module.question.application.validation.QuestionValidator;
 import com.quizcode.module.question.domain.QuestionRepository;
 import com.quizcode.module.question.domain.QuestionService;
+import com.quizcode.module.question.domain.QuestionToAiPort;
+import com.quizcode.module.question.domain.entity.message.AIMessage;
+import com.quizcode.module.question.domain.entity.question.AIQuestion;
 import com.quizcode.module.question.domain.entity.question.Question;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +16,12 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuestionValidator questionValidator;
+    private final QuestionToAiPort questionToAiPort;
 
-    public QuestionServiceImpl(QuestionRepository questionRepository, QuestionValidator questionValidator) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, QuestionValidator questionValidator, QuestionToAiPort questionToAiPort) {
         this.questionRepository = questionRepository;
         this.questionValidator = questionValidator;
+        this.questionToAiPort = questionToAiPort;
     }
 
     @Override
@@ -53,5 +58,12 @@ public class QuestionServiceImpl implements QuestionService {
     public void delete(String ownerId, String quizId, String id) {
         questionValidator.validateToDelete(ownerId, quizId, id);
         questionRepository.delete(id);
+    }
+
+    @Override
+    public AIQuestion generateAIQuestion(String ownerId, String quizId, List<AIMessage> messages) {
+        questionValidator.validateToGenerate(ownerId, quizId, messages);
+        List<Question> savedQuestions = questionRepository.findByQuizId(quizId);
+        return questionToAiPort.generateQuestion(savedQuestions, messages);
     }
 }

@@ -15,10 +15,6 @@ public class AIReviewAdapter implements AIReviewPort {
 
     private final ChatClient chatClient;
 
-    public AIReviewAdapter(ChatClient.Builder chatClientBuilder) {
-        this.chatClient = chatClientBuilder.build();
-    }
-
     private static final String SYSTEM_PROMPT =
             "Eres un evaluador de código para un cuestionario de programación. " +
             "Evalúa la respuesta del participante de forma objetiva.\n\n" +
@@ -30,6 +26,10 @@ public class AIReviewAdapter implements AIReviewPort {
             "Proporciona un feedback en español de máximo 500 caracteres, tanto si la respuesta es correcta como incorrecta.\n" +
             "El feedback debe hacer referencia únicamente a la corrección de la respuesta y debe proporcionar la respuesta correcta en caso de error.\n" +
             "El feedback debe ser claro y conciso.";
+
+    public AIReviewAdapter(ChatClient.Builder chatClientBuilder) {
+        this.chatClient = chatClientBuilder.build();
+    }
 
     @Retryable(retryFor = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 30000, multiplier = 2))
     @Override

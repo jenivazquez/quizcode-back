@@ -1,11 +1,15 @@
 package com.quizcode.module.question.api;
 
 import com.quizcode.module.question.api.dto.IdQuestionResponse;
+import com.quizcode.module.question.api.dto.question.AIQuestionResponse;
+import com.quizcode.module.question.api.dto.message.MessageRequest;
 import com.quizcode.module.question.api.dto.question.QuestionRequest;
 import com.quizcode.module.question.api.dto.question.QuestionResponse;
 import com.quizcode.module.question.api.dto.question.QuestionToAnswerResponse;
 import com.quizcode.module.question.api.mapper.QuestionMapper;
 import com.quizcode.module.question.domain.QuestionService;
+import com.quizcode.module.question.domain.entity.message.AIMessage;
+
 import com.quizcode.shared.SecurityUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -69,5 +73,13 @@ public class QuestionController {
         return questionService.findByQuizIdToReview(quizId, partId).stream()
                 .map(questionMapper::questionToQuestionResponse)
                 .toList();
+    }
+
+    @PostMapping(path = "/user/{ownerId}/quiz/{quizId}/question/generate")
+    @ResponseStatus(HttpStatus.OK)
+    public AIQuestionResponse generateAIQuestion(@PathVariable String ownerId, @PathVariable String quizId, @RequestBody List<MessageRequest> messages) {
+        SecurityUtil.checkAuthorized(ownerId);
+        List<AIMessage> AIMessages = messages.stream().map(questionMapper::messageRequestToAiMessage).toList();
+        return questionMapper.aiQuestionToAIQuestionResponse(questionService.generateAIQuestion(ownerId, quizId, AIMessages));
     }
 }
