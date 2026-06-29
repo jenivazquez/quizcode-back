@@ -1,4 +1,4 @@
-package com.quizcode.module.question.domain;
+package com.quizcode.module.question.domain.port;
 
 public interface QuestionToQuizPort {
     void checkQuizExistByOwner(String quizId, String ownerId);

@@ -3,7 +3,7 @@ package com.quizcode.module.question.application;
 import com.quizcode.module.question.application.validation.QuestionValidator;
 import com.quizcode.module.question.domain.QuestionRepository;
 import com.quizcode.module.question.domain.QuestionService;
-import com.quizcode.module.question.domain.QuestionToAiPort;
+import com.quizcode.module.question.domain.port.QuestionToAiPort;
 import com.quizcode.module.question.domain.entity.message.AIMessage;
 import com.quizcode.module.question.domain.entity.question.AIQuestion;
 import com.quizcode.module.question.domain.entity.question.Question;

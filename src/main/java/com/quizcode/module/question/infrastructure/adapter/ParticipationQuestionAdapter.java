@@ -1,6 +1,6 @@
 package com.quizcode.module.question.infrastructure.adapter;
 
-import com.quizcode.module.participation.domain.ParticipationToQuestionPort;
+import com.quizcode.module.participation.domain.port.ParticipationToQuestionPort;
 import com.quizcode.module.participation.domain.entity.question.QuestionSummary;
 import com.quizcode.module.participation.domain.entity.question.QuestionType;
 import com.quizcode.module.question.domain.QuestionAdapterService;

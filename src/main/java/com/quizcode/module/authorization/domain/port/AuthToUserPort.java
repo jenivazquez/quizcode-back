@@ -1,4 +1,4 @@
-package com.quizcode.module.authorization.domain;
+package com.quizcode.module.authorization.domain.port;
 
 public interface AuthToUserPort {
     String verifyLoginAndGetId(String email, String password);

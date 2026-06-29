@@ -1,4 +1,4 @@
-package com.quizcode.module.room.domain;
+package com.quizcode.module.room.domain.port;
 
 import java.util.Map;
 

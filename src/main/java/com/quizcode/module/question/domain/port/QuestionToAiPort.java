@@ -1,4 +1,4 @@
-package com.quizcode.module.question.domain;
+package com.quizcode.module.question.domain.port;
 
 import com.quizcode.module.question.domain.entity.message.AIMessage;
 import com.quizcode.module.question.domain.entity.question.AIQuestion;

@@ -4,7 +4,7 @@ import com.quizcode.error.exception.AutoGenerationExceptionCustom;
 import com.quizcode.error.exception.InvalidDataExceptionCustom;
 import com.quizcode.module.authorization.domain.AuthService;
 import com.quizcode.module.authorization.domain.TokenProvider;
-import com.quizcode.module.authorization.domain.AuthToUserPort;
+import com.quizcode.module.authorization.domain.port.AuthToUserPort;
 import com.quizcode.module.authorization.domain.entity.Auth;
 import com.quizcode.shared.Util;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.quizcode.module.room.domain;
+package com.quizcode.module.room.domain.port;
 
 public interface RoomToParticipationPort {
     boolean hasStartedParticipations(String roomId);

@@ -1,6 +1,6 @@
 package com.quizcode.module.user.infrastructure.adapter;
 
-import com.quizcode.module.authorization.domain.AuthToUserPort;
+import com.quizcode.module.authorization.domain.port.AuthToUserPort;
 import com.quizcode.module.user.domain.UserAdapterService;
 import org.springframework.stereotype.Component;
 

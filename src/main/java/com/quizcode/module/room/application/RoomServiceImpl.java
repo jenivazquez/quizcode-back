@@ -3,7 +3,7 @@ package com.quizcode.module.room.application;
 import com.quizcode.error.exception.AutoGenerationExceptionCustom;
 import com.quizcode.error.exception.NotFoundExceptionCustom;
 import com.quizcode.module.room.application.validation.RoomValidator;
-import com.quizcode.module.room.domain.RoomToQuizPort;
+import com.quizcode.module.room.domain.port.RoomToQuizPort;
 import com.quizcode.module.room.domain.RoomRepository;
 import com.quizcode.module.room.domain.RoomService;
 import com.quizcode.module.room.domain.entity.Room;

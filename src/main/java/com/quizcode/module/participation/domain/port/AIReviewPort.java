@@ -1,4 +1,4 @@
-package com.quizcode.module.participation.domain;
+package com.quizcode.module.participation.domain.port;
 
 import com.quizcode.module.participation.domain.entity.ai.AIReview;
 

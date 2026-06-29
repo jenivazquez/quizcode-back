@@ -4,7 +4,7 @@ import com.quizcode.error.exception.NotFoundExceptionCustom;
 import com.quizcode.module.quiz.application.validation.QuizValidator;
 import com.quizcode.module.quiz.domain.QuizAdapterService;
 import com.quizcode.module.quiz.domain.QuizRepository;
-import com.quizcode.module.quiz.domain.QuizToRoomPort;
+import com.quizcode.module.quiz.domain.port.QuizToRoomPort;
 import com.quizcode.module.quiz.domain.entity.Quiz;
 import com.quizcode.module.quiz.domain.entity.QuizStatus;
 import org.springframework.stereotype.Service;

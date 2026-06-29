@@ -1,10 +1,10 @@
 package com.quizcode.module.quiz.infrastructure.adapter;
 
-import com.quizcode.module.participation.domain.ParticipationToQuizPort;
-import com.quizcode.module.question.domain.QuestionToQuizPort;
+import com.quizcode.module.participation.domain.port.ParticipationToQuizPort;
+import com.quizcode.module.question.domain.port.QuestionToQuizPort;
 import com.quizcode.module.quiz.domain.QuizAdapterService;
 import com.quizcode.module.quiz.domain.entity.Quiz;
-import com.quizcode.module.room.domain.RoomToQuizPort;
+import com.quizcode.module.room.domain.port.RoomToQuizPort;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

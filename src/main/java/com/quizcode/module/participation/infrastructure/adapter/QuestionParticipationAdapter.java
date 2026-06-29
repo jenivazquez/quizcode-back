@@ -1,7 +1,7 @@
 package com.quizcode.module.participation.infrastructure.adapter;
 
 import com.quizcode.module.participation.domain.ParticipationAdapterService;
-import com.quizcode.module.question.domain.QuestionToParticipationPort;
+import com.quizcode.module.question.domain.port.QuestionToParticipationPort;
 import org.springframework.stereotype.Component;
 
 @Component

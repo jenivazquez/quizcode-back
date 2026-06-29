@@ -1,6 +1,6 @@
 package com.quizcode.module.participation.infrastructure.adapter;
 
-import com.quizcode.module.participation.domain.AIReviewPort;
+import com.quizcode.module.participation.domain.port.AIReviewPort;
 import com.quizcode.module.participation.domain.entity.ai.AIReview;
 import com.quizcode.shared.Util;
 import org.springframework.ai.chat.client.ChatClient;

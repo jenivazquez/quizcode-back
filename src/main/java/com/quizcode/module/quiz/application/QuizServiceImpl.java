@@ -6,8 +6,8 @@ import com.quizcode.module.quiz.domain.entity.Quiz;
 import com.quizcode.module.quiz.domain.entity.QuizStatus;
 import com.quizcode.module.quiz.domain.QuizRepository;
 import com.quizcode.module.quiz.domain.QuizService;
-import com.quizcode.module.quiz.domain.QuizToQuestionPort;
-import com.quizcode.module.quiz.domain.QuizToRoomPort;
+import com.quizcode.module.quiz.domain.port.QuizToQuestionPort;
+import com.quizcode.module.quiz.domain.port.QuizToRoomPort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.quizcode.module.participation.application;
 
-import com.quizcode.module.participation.domain.AIReviewPort;
+import com.quizcode.module.participation.domain.port.AIReviewPort;
 import com.quizcode.module.participation.domain.ParticipationRepository;
 import com.quizcode.module.participation.domain.entity.ai.AIReview;
 import com.quizcode.module.participation.domain.entity.answer.Answer;

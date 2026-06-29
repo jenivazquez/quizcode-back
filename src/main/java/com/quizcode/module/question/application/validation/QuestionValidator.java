@@ -4,10 +4,10 @@ import com.quizcode.error.exception.InvalidDataExceptionCustom;
 import com.quizcode.error.exception.InvalidStatusExceptionCustom;
 import com.quizcode.error.exception.NotFoundExceptionCustom;
 import com.quizcode.module.question.domain.QuestionRepository;
-import com.quizcode.module.question.domain.QuestionToParticipationPort;
+import com.quizcode.module.question.domain.port.QuestionToParticipationPort;
 import com.quizcode.module.question.domain.entity.message.AIMessage;
 import com.quizcode.module.question.domain.entity.question.Question;
-import com.quizcode.module.question.domain.QuestionToQuizPort;
+import com.quizcode.module.question.domain.port.QuestionToQuizPort;
 import com.quizcode.shared.ValidatorUtil;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,7 @@
 package com.quizcode.module.question.infrastructure.adapter;
 
 import com.quizcode.error.exception.AutoGenerationExceptionCustom;
-import com.quizcode.module.question.domain.QuestionToAiPort;
+import com.quizcode.module.question.domain.port.QuestionToAiPort;
 import com.quizcode.module.question.domain.entity.option.AIOption;
 import com.quizcode.module.question.domain.entity.message.AIMessage;
 import com.quizcode.module.question.domain.entity.question.AIQuestion;

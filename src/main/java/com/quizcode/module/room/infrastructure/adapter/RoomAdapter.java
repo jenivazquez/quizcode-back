@@ -1,7 +1,7 @@
 package com.quizcode.module.room.infrastructure.adapter;
 
-import com.quizcode.module.participation.domain.ParticipationToRoomPort;
-import com.quizcode.module.quiz.domain.QuizToRoomPort;
+import com.quizcode.module.participation.domain.port.ParticipationToRoomPort;
+import com.quizcode.module.quiz.domain.port.QuizToRoomPort;
 import com.quizcode.module.room.domain.RoomAdapterService;
 import org.springframework.stereotype.Component;
 
