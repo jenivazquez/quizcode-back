@@ -3,6 +3,9 @@ package com.quizcode.module.question.application;
 import com.quizcode.module.question.application.validation.QuestionValidator;
 import com.quizcode.module.question.domain.QuestionRepository;
 import com.quizcode.module.question.domain.QuestionService;
+import com.quizcode.module.question.domain.port.QuestionToAiPort;
+import com.quizcode.module.question.domain.entity.message.AIMessage;
+import com.quizcode.module.question.domain.entity.question.AIQuestion;
 import com.quizcode.module.question.domain.entity.question.Question;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +16,12 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuestionValidator questionValidator;
+    private final QuestionToAiPort questionToAiPort;
 
-    public QuestionServiceImpl(QuestionRepository questionRepository, QuestionValidator questionValidator) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, QuestionValidator questionValidator, QuestionToAiPort questionToAiPort) {
         this.questionRepository = questionRepository;
         this.questionValidator = questionValidator;
+        this.questionToAiPort = questionToAiPort;
     }
 
     @Override
@@ -28,6 +33,18 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<Question> findByQuizId(String ownerId, String quizId) {
         questionValidator.validateToFindByQuizId(ownerId, quizId);
+        return questionRepository.findByQuizId(quizId);
+    }
+
+    @Override
+    public List<Question> findByQuizIdToAnswer(String quizId, String participationId) {
+        questionValidator.validateToFindByQuizIdToAnswer(participationId);
+        return questionRepository.findByQuizId(quizId);
+    }
+
+    @Override
+    public List<Question> findByQuizIdToReview(String quizId, String participationId) {
+        questionValidator.validateToFindByQuizIdToReview(participationId);
         return questionRepository.findByQuizId(quizId);
     }
 
@@ -44,7 +61,9 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void deleteByQuizId(String quizId) {
-        questionRepository.deleteByQuizId(quizId);
+    public AIQuestion generateAIQuestion(String ownerId, String quizId, List<AIMessage> messages) {
+        questionValidator.validateToGenerate(ownerId, quizId, messages);
+        List<Question> savedQuestions = questionRepository.findByQuizId(quizId);
+        return questionToAiPort.generateQuestion(savedQuestions, messages);
     }
 }

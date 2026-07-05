@@ -60,4 +60,9 @@ public class QuestionRepositoryImpl implements QuestionRepository {
     public void deleteByQuizId(String quizId) {
         questionMongoRepository.deleteByQuizId(quizId);
     }
+
+    @Override
+    public boolean existsByQuizId(String quizId) {
+        return questionMongoRepository.existsByQuizId(quizId);
+    }
 }

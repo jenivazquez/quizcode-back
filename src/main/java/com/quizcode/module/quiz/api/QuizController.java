@@ -3,6 +3,7 @@ package com.quizcode.module.quiz.api;
 import com.quizcode.module.quiz.api.dto.IdQuizResponse;
 import com.quizcode.module.quiz.api.dto.QuizRequest;
 import com.quizcode.module.quiz.api.dto.QuizResponse;
+import com.quizcode.module.quiz.api.dto.QuizToAnswerResponse;
 import com.quizcode.module.quiz.api.dto.UpdateQuizStatusRequest;
 import com.quizcode.module.quiz.api.mapper.QuizMapper;
 import com.quizcode.module.quiz.domain.QuizService;
@@ -67,5 +68,11 @@ public class QuizController {
     public void delete(@PathVariable String ownerId, @PathVariable String id) {
         SecurityUtil.checkAuthorized(ownerId);
         quizService.delete(id, ownerId);
+    }
+
+    @GetMapping(path = "/quiz/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public QuizToAnswerResponse findByIdToAnswer(@PathVariable String id) {
+        return quizMapper.quizToQuizToAnswerResponse(quizService.findByIdToAnswer(id));
     }
 }

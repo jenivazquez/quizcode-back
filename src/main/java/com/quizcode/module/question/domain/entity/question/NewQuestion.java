@@ -21,7 +21,7 @@ public class NewQuestion {
 
     private void validate(String quizId, String statement, QuestionType type, Integer order, Integer score) {
         Map<String, Object> fields = new LinkedHashMap<>();
-        fields.put("cuestionario", quizId);
+        fields.put("identificador del cuestionario", quizId);
         fields.put("enunciado", statement);
         fields.put("tipo", type);
         fields.put("orden", order);

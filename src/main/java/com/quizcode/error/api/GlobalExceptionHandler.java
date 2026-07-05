@@ -1,6 +1,7 @@
 package com.quizcode.error.api;
 
 import com.quizcode.error.api.dto.ErrorResponse;
+import com.quizcode.error.exception.AutoGenerationExceptionCustom;
 import com.quizcode.error.exception.ForbiddenAccessExceptionCustom;
 import com.quizcode.error.exception.InvalidCredentialsExceptionCustom;
 import com.quizcode.error.exception.InvalidDataExceptionCustom;
@@ -9,8 +10,11 @@ import com.quizcode.error.exception.NotFoundExceptionCustom;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.Instant;
 
@@ -42,9 +46,29 @@ public class GlobalExceptionHandler {
         return getResponseEntity(exception, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(AutoGenerationExceptionCustom.class)
+    ResponseEntity<ErrorResponse> handleAutoGeneration(AutoGenerationExceptionCustom exception) {
+        return getResponseEntity(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     ResponseEntity<ErrorResponse> handleNotReadable(HttpMessageNotReadableException exception) {
-        return getResponseEntity("Uno de los campos tiene un valorque no corresponde con sus valores permitidos", HttpStatus.BAD_REQUEST);
+        return getResponseEntity("Uno de los campos tiene un valor que no corresponde con sus valores permitidos", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    ResponseEntity<ErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException exception) {
+        return getResponseEntity("Método HTTP no permitido para este endpoint", HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException exception) {
+        return getResponseEntity("El valor del parámetro '" + exception.getName() + "' no tiene el formato correcto", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    ResponseEntity<ErrorResponse> handleMediaTypeNotSupported(HttpMediaTypeNotSupportedException exception) {
+        return getResponseEntity("El Content-Type de la petición no está soportado", HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
     @ExceptionHandler(RuntimeException.class)

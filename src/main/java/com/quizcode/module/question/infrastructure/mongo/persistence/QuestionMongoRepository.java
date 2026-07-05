@@ -18,4 +18,6 @@ public interface QuestionMongoRepository extends MongoRepository<QuestionDocumen
     boolean existsByQuizIdAndOrder(String quizId, Integer order);
 
     boolean existsByQuizIdAndOrderAndIdNot(String quizId, Integer order, String id);
+
+    boolean existsByQuizId(String quizId);
 }

@@ -2,9 +2,12 @@ spring:
   application:
     name: quizcode
   profiles:
-    active: local
+    active: ${AI_PROFILE:groq}
   mongodb:
-    uri: ${MONGO_URI}
-    database: ${MONGO_DB}
+    uri: ${MONGO_URI:mongodb://admin:admin123@localhost:27017/quizcode?authSource=admin}
+    database: quizcode
+
 jwt:
-  secret: ${JWT_SECRET}
+  secret: ${JWT_SECRET:QuizCodeSecretKeyFor256BitEncryption1234}
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost,http://localhost:5173}

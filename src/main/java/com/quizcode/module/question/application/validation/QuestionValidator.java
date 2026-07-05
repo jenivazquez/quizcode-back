@@ -4,38 +4,63 @@ import com.quizcode.error.exception.InvalidDataExceptionCustom;
 import com.quizcode.error.exception.InvalidStatusExceptionCustom;
 import com.quizcode.error.exception.NotFoundExceptionCustom;
 import com.quizcode.module.question.domain.QuestionRepository;
+import com.quizcode.module.question.domain.port.QuestionToParticipationPort;
+import com.quizcode.module.question.domain.entity.message.AIMessage;
 import com.quizcode.module.question.domain.entity.question.Question;
-import com.quizcode.module.question.domain.QuizPort;
+import com.quizcode.module.question.domain.port.QuestionToQuizPort;
+import com.quizcode.shared.ValidatorUtil;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class QuestionValidator {
 
     private final QuestionRepository questionRepository;
-    private final QuizPort quizPort;
+    private final QuestionToQuizPort quizPort;
+    private final QuestionToParticipationPort participationPort;
 
-    public QuestionValidator(QuestionRepository questionRepository, QuizPort quizPort) {
+    public QuestionValidator(QuestionRepository questionRepository, QuestionToQuizPort quizPort, QuestionToParticipationPort participationPort) {
         this.questionRepository = questionRepository;
         this.quizPort = quizPort;
+        this.participationPort = participationPort;
     }
 
-    public void validateToCreate(String ownerId, Question question) {
-        checkQuizEditable(question.getQuizId(), ownerId);
-        checkOrderNotDuplicated(question.getQuizId(), question.getOrder());
+    public void validateToCreate(String ownerId, Question newQuestion) {
+        checkQuizEditable(newQuestion.getQuizId(), ownerId);
+        checkOrderNotDuplicated(newQuestion.getQuizId(), newQuestion.getOrder());
     }
 
     public void validateToFindByQuizId(String ownerId, String quizId) {
-        quizPort.checkQuizAccess(quizId, ownerId);
+        quizPort.checkQuizExistByOwner(quizId, ownerId);
     }
 
-    public void validateToUpdate(String ownerId, Question question) {
-        checkQuestionExists(question.getQuizId(), question.getId());
-        checkQuizEditable(question.getQuizId(), ownerId);
-        checkOrderNotDuplicatedForUpdate(question.getQuizId(), question.getOrder(), question.getId());
+    public void validateToFindByQuizIdToAnswer(String participationId) {
+        if (!participationPort.isParticipationStarted(participationId)) {
+            throw new InvalidStatusExceptionCustom("La participación no está activa");
+        }
+    }
+
+    public void validateToFindByQuizIdToReview(String participationId) {
+        if (!participationPort.isParticipationFinished(participationId)) {
+            throw new InvalidStatusExceptionCustom("La participación no está finalizada. No puedes obtener la lista de preguntas con sus respuestas correctas.");
+        }
+    }
+
+    public void validateToUpdate(String ownerId, Question newQuestion) {
+        checkQuestionExists(newQuestion.getQuizId(), newQuestion.getId());
+        checkQuizEditable(newQuestion.getQuizId(), ownerId);
+        checkOrderNotDuplicatedForUpdate(newQuestion.getQuizId(), newQuestion.getOrder(), newQuestion.getId());
     }
 
     public void validateToDelete(String ownerId, String quizId, String id) {
         checkQuestionExists(quizId, id);
+        checkQuizEditable(quizId, ownerId);
+    }
+
+    public void validateToGenerate(String ownerId, String quizId, List<AIMessage> messages) {
+        ValidatorUtil.validateFieldsNotNull(Map.of("mensajes", messages));
         checkQuizEditable(quizId, ownerId);
     }
 

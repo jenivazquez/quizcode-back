@@ -1,20 +1,25 @@
 package com.quizcode.module.question.infrastructure.adapter;
 
-import com.quizcode.module.question.domain.QuestionService;
-import com.quizcode.module.quiz.domain.QuestionPort;
+import com.quizcode.module.question.domain.QuestionAdapterService;
+import com.quizcode.module.quiz.domain.port.QuizToQuestionPort;
 import org.springframework.stereotype.Component;
 
 @Component
-public class QuestionAdapter implements QuestionPort {
+public class QuestionAdapter implements QuizToQuestionPort {
 
-    private final QuestionService questionService;
+    private final QuestionAdapterService questionAdapterService;
 
-    public QuestionAdapter(QuestionService questionService) {
-        this.questionService = questionService;
+    public QuestionAdapter(QuestionAdapterService questionAdapterService) {
+        this.questionAdapterService = questionAdapterService;
     }
 
     @Override
     public void deleteQuestionsByQuizId(String quizId) {
-        questionService.deleteByQuizId(quizId);
+        questionAdapterService.deleteByQuizId(quizId);
+    }
+
+    @Override
+    public boolean hasQuestions(String quizId) {
+        return questionAdapterService.hasQuestions(quizId);
     }
 }
