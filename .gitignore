@@ -33,6 +33,4 @@ build/
 .vscode/
 
 ### Secrets ###
-src/main/resources/application-local.yml
-src/main/resources/application-groq.yml
-src/main/resources/application-gemini.yml
+src/main/resources/application.properties
