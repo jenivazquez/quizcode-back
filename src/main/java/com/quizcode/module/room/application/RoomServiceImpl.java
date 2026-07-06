@@ -3,6 +3,7 @@ package com.quizcode.module.room.application;
 import com.quizcode.error.exception.AutoGenerationExceptionCustom;
 import com.quizcode.error.exception.NotFoundExceptionCustom;
 import com.quizcode.module.room.application.validation.RoomValidator;
+import com.quizcode.module.room.domain.port.RoomToParticipationPort;
 import com.quizcode.module.room.domain.port.RoomToQuizPort;
 import com.quizcode.module.room.domain.RoomRepository;
 import com.quizcode.module.room.domain.RoomService;
@@ -10,6 +11,7 @@ import com.quizcode.module.room.domain.entity.Room;
 import com.quizcode.module.room.domain.entity.RoomStatus;
 import com.quizcode.module.room.domain.entity.QuizRoom;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.Instant;
@@ -27,14 +29,17 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final RoomValidator roomValidator;
     private final RoomToQuizPort quizPort;
+    private final RoomToParticipationPort participationPort;
 
-    public RoomServiceImpl(RoomRepository roomRepository, RoomValidator roomValidator, RoomToQuizPort quizPort) {
+    public RoomServiceImpl(RoomRepository roomRepository, RoomValidator roomValidator, RoomToQuizPort quizPort, RoomToParticipationPort participationPort) {
         this.roomRepository = roomRepository;
         this.roomValidator = roomValidator;
         this.quizPort = quizPort;
+        this.participationPort = participationPort;
     }
 
     @Override
+    @Transactional
     public String create(String ownerId, Room room) {
         roomValidator.validateToCreate(ownerId, room);
         String id = roomRepository.create(room);
@@ -94,8 +99,10 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional
     public void delete(String id, String ownerId, String quizId) {
         roomValidator.validateToDelete(id, ownerId, quizId);
+        participationPort.deleteParticipationsByRoomId(id);
         roomRepository.delete(id);
         quizPort.unlockQuizIfNoRooms(quizId);
     }

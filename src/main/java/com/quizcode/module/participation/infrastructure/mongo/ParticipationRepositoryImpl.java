@@ -111,4 +111,9 @@ public class ParticipationRepositoryImpl implements ParticipationRepository {
     public void delete(String id) {
         partMongoRepository.deleteById(id);
     }
+
+    @Override
+    public void deleteByRoomId(String roomId) {
+        partMongoRepository.deleteByRoomId(roomId);
+    }
 }

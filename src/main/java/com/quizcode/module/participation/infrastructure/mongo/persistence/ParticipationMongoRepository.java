@@ -30,6 +30,8 @@ public interface ParticipationMongoRepository extends MongoRepository<Participat
 
     boolean existsByRoomIdAndReviewStatusIn(String roomId, List<ReviewStatus> listStatus);
 
+    void deleteByRoomId(String roomId);
+
     @Query("{ '_id': ?0 }")
     @Update("{ '$set': { 'answers': ?1, 'finishedAt': ?2, 'status': ?3, 'reviewStatus': ?4, 'totalTime': ?5, 'totalScore': ?6 } }")
     void update(String id, List<AnswerDocument> answers, Instant finishedAt, ParticipationStatus status, ReviewStatus reviewStatus, Long totalTime, Integer totalScore);

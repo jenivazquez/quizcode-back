@@ -4,7 +4,7 @@ spring:
   profiles:
     active: ${AI_PROFILE:groq}
   mongodb:
-    uri: ${MONGO_URI:mongodb://admin:admin123@localhost:27017/quizcode?authSource=admin}
+    uri: ${MONGO_URI:mongodb://admin:admin123@localhost:27017/quizcode?authSource=admin&replicaSet=rs0}
     database: quizcode
 
 jwt:

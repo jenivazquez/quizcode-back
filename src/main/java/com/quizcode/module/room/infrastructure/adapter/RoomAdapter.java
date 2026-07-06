@@ -20,8 +20,8 @@ public class RoomAdapter implements QuizToRoomPort, ParticipationToRoomPort {
     }
 
     @Override
-    public void deleteRoomsByQuizId(String quizId) {
-        roomAdapterService.deleteRoomsByQuizId(quizId);
+    public void deleteRoomsAndPartsByQuizId(String quizId) {
+        roomAdapterService.deleteRoomsAndPartsByQuizId(quizId);
     }
 
     @Override

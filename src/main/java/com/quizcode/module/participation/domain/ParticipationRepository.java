@@ -20,4 +20,5 @@ public interface ParticipationRepository {
     void update(Participation participation);
     void updateReviewAnswers(String id, List<Answer> corrections, Integer totalScore, ReviewStatus reviewStatus);
     void delete(String id);
+    void deleteByRoomId(String roomId);
 }
