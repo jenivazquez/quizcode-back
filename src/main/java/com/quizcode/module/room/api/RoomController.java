@@ -29,7 +29,7 @@ public class RoomController {
     @PostMapping(path = "/user/{ownerId}/quiz/{quizId}/room")
     @ResponseStatus(HttpStatus.CREATED)
     public IdRoomResponse create(@PathVariable String ownerId, @PathVariable String quizId, @RequestBody CreateRoomRequest request) {
-        SecurityUtil.checkAuthorized(ownerId);
+        SecurityUtil.checkAuthorizedUser(ownerId);
         String id = roomService.create(ownerId, roomMapper.createRoomRequestToRoom(quizId, request));
         return new IdRoomResponse(id);
     }
@@ -37,7 +37,7 @@ public class RoomController {
     @GetMapping(path = "/user/{ownerId}/quiz/{quizId}/room")
     @ResponseStatus(HttpStatus.OK)
     public List<QuizRoomResponse> findByQuizId(@PathVariable String ownerId, @PathVariable String quizId) {
-        SecurityUtil.checkAuthorized(ownerId);
+        SecurityUtil.checkAuthorizedUser(ownerId);
         return roomService.findByQuizId(ownerId, quizId).stream()
                 .map(roomMapper::quizRoomToQuizRoomResponse)
                 .toList();
@@ -46,7 +46,7 @@ public class RoomController {
     @GetMapping(path = "/user/{ownerId}/room")
     @ResponseStatus(HttpStatus.OK)
     public List<QuizRoomResponse> findByOwnerId(@PathVariable String ownerId) {
-        SecurityUtil.checkAuthorized(ownerId);
+        SecurityUtil.checkAuthorizedUser(ownerId);
         return roomService.findByOwnerId(ownerId).stream()
                 .map(roomMapper::quizRoomToQuizRoomResponse)
                 .toList();
@@ -55,35 +55,35 @@ public class RoomController {
     @GetMapping(path = "/user/{ownerId}/quiz/{quizId}/room/{id}")
     @ResponseStatus(HttpStatus.OK)
     public QuizRoomResponse findById(@PathVariable String ownerId, @PathVariable String quizId, @PathVariable String id) {
-        SecurityUtil.checkAuthorized(ownerId);
+        SecurityUtil.checkAuthorizedUser(ownerId);
         return roomMapper.quizRoomToQuizRoomResponse(roomService.findById(id, ownerId, quizId));
     }
 
     @PatchMapping(path = "/user/{ownerId}/quiz/{quizId}/room/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable String ownerId, @PathVariable String quizId, @PathVariable String id, @RequestBody UpdateRoomRequest request) {
-        SecurityUtil.checkAuthorized(ownerId);
+        SecurityUtil.checkAuthorizedUser(ownerId);
         roomService.update(ownerId, roomMapper.updateRoomRequestToRoom(id, quizId, request));
     }
 
     @PatchMapping(path = "/user/{ownerId}/quiz/{quizId}/room/{id}/status")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateStatus(@PathVariable String ownerId, @PathVariable String quizId, @PathVariable String id, @RequestBody UpdateRoomStatusRequest request) {
-        SecurityUtil.checkAuthorized(ownerId);
+        SecurityUtil.checkAuthorizedUser(ownerId);
         roomService.updateStatus(id, ownerId, quizId, request.getStatus());
     }
 
     @PatchMapping(path = "/user/{ownerId}/quiz/{quizId}/room/{id}/reviewed")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void markAsReviewed(@PathVariable String ownerId, @PathVariable String quizId, @PathVariable String id) {
-        SecurityUtil.checkAuthorized(ownerId);
+        SecurityUtil.checkAuthorizedUser(ownerId);
         roomService.markAsReviewed(id, ownerId, quizId);
     }
 
     @DeleteMapping(path = "/user/{ownerId}/quiz/{quizId}/room/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable String ownerId, @PathVariable String quizId, @PathVariable String id) {
-        SecurityUtil.checkAuthorized(ownerId);
+        SecurityUtil.checkAuthorizedUser(ownerId);
         roomService.delete(id, ownerId, quizId);
     }
 

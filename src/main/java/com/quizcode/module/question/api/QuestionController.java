@@ -31,7 +31,7 @@ public class QuestionController {
     @PostMapping(path = "/user/{ownerId}/quiz/{quizId}/question")
     @ResponseStatus(HttpStatus.CREATED)
     public IdQuestionResponse create(@PathVariable String ownerId, @PathVariable String quizId, @RequestBody QuestionRequest request) {
-        SecurityUtil.checkAuthorized(ownerId);
+        SecurityUtil.checkAuthorizedUser(ownerId);
         String idQuestion = questionService.create(ownerId, questionMapper.questionRequestToQuestion(quizId, request));
         return new IdQuestionResponse(idQuestion);
     }
@@ -39,7 +39,7 @@ public class QuestionController {
     @GetMapping(path = "/user/{ownerId}/quiz/{quizId}/question")
     @ResponseStatus(HttpStatus.OK)
     public List<QuestionResponse> findByQuizId(@PathVariable String ownerId, @PathVariable String quizId) {
-        SecurityUtil.checkAuthorized(ownerId);
+        SecurityUtil.checkAuthorizedUser(ownerId);
         return questionService.findByQuizId(ownerId, quizId).stream()
                 .map(questionMapper::questionToQuestionResponse)
                 .toList();
@@ -48,20 +48,21 @@ public class QuestionController {
     @PatchMapping(path = "/user/{ownerId}/quiz/{quizId}/question/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable String ownerId, @PathVariable String quizId, @PathVariable String id, @RequestBody QuestionRequest request) {
-        SecurityUtil.checkAuthorized(ownerId);
+        SecurityUtil.checkAuthorizedUser(ownerId);
         questionService.update(ownerId, questionMapper.questionRequestToQuestion(id, quizId, request));
     }
 
     @DeleteMapping(path = "/user/{ownerId}/quiz/{quizId}/question/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable String ownerId, @PathVariable String quizId, @PathVariable String id) {
-        SecurityUtil.checkAuthorized(ownerId);
+        SecurityUtil.checkAuthorizedUser(ownerId);
         questionService.delete(ownerId, quizId, id);
     }
 
     @GetMapping(path = "/quiz/{quizId}/question")
     @ResponseStatus(HttpStatus.OK)
     public List<QuestionToAnswerResponse> findByQuizIdToAnswer(@PathVariable String quizId, @RequestParam String partId) {
+        SecurityUtil.checkAuthorizedPart(partId);
         return questionService.findByQuizIdToAnswer(quizId, partId).stream()
                 .map(questionMapper::questionToQuestionToAnswerResponse)
                 .toList();
@@ -70,6 +71,7 @@ public class QuestionController {
     @GetMapping(path = "/quiz/{quizId}/question/review")
     @ResponseStatus(HttpStatus.OK)
     public List<QuestionResponse> findByQuizIdToReview(@PathVariable String quizId, @RequestParam String partId) {
+        SecurityUtil.checkAuthorizedPart(partId);
         return questionService.findByQuizIdToReview(quizId, partId).stream()
                 .map(questionMapper::questionToQuestionResponse)
                 .toList();
@@ -78,7 +80,7 @@ public class QuestionController {
     @PostMapping(path = "/user/{ownerId}/quiz/{quizId}/question/generate")
     @ResponseStatus(HttpStatus.OK)
     public AIQuestionResponse generateAIQuestion(@PathVariable String ownerId, @PathVariable String quizId, @RequestBody List<MessageRequest> messages) {
-        SecurityUtil.checkAuthorized(ownerId);
+        SecurityUtil.checkAuthorizedUser(ownerId);
         List<AIMessage> AIMessages = messages.stream().map(questionMapper::messageRequestToAiMessage).toList();
         return questionMapper.aiQuestionToAIQuestionResponse(questionService.generateAIQuestion(ownerId, quizId, AIMessages));
     }

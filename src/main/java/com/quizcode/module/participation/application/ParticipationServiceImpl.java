@@ -5,12 +5,15 @@ import com.quizcode.error.exception.NotFoundExceptionCustom;
 import com.quizcode.module.participation.application.validation.ParticipationValidator;
 import com.quizcode.module.participation.domain.ParticipationRepository;
 import com.quizcode.module.participation.domain.ParticipationService;
+import com.quizcode.module.participation.domain.port.PartToAuthPort;
 import com.quizcode.module.participation.domain.port.ParticipationToQuestionPort;
 import com.quizcode.module.participation.domain.port.ParticipationToQuizPort;
 import com.quizcode.module.participation.domain.port.ParticipationToRoomPort;
 import com.quizcode.module.participation.domain.entity.answer.Answer;
 import com.quizcode.module.participation.domain.entity.question.QuestionSummary;
 import com.quizcode.module.participation.domain.entity.participation.Participation;
+import com.quizcode.module.participation.domain.entity.participation.ParticipationSession;
+import com.quizcode.module.participation.domain.entity.participation.PartToken;
 import com.quizcode.module.participation.domain.entity.status.ReviewStatus;
 import com.quizcode.shared.Util;
 import org.springframework.stereotype.Service;
@@ -26,29 +29,43 @@ public class ParticipationServiceImpl implements ParticipationService {
     private final ParticipationToRoomPort roomPort;
     private final ParticipationToQuestionPort questionPort;
     private final ParticipationToQuizPort quizPort;
+    private final PartToAuthPort authPort;
     private final AnswerReviewer answerReviewer;
 
-    public ParticipationServiceImpl(ParticipationRepository partRepository, ParticipationValidator partValidator, ParticipationToRoomPort roomPort, ParticipationToQuestionPort questionPort, ParticipationToQuizPort quizPort, AnswerReviewer answerReviewer) {
+    public ParticipationServiceImpl(ParticipationRepository partRepository, ParticipationValidator partValidator, ParticipationToRoomPort roomPort, ParticipationToQuestionPort questionPort, ParticipationToQuizPort quizPort, PartToAuthPort authPort, AnswerReviewer answerReviewer) {
         this.partRepository = partRepository;
         this.partValidator = partValidator;
         this.roomPort = roomPort;
         this.questionPort = questionPort;
         this.quizPort = quizPort;
+        this.authPort = authPort;
         this.answerReviewer = answerReviewer;
     }
 
     @Override
-    public String create(Participation participation) {
+    public ParticipationSession create(Participation participation) {
         partValidator.validateToCreate(participation);
-        return partRepository.create(participation);
+        String id = partRepository.create(participation);
+        PartToken partToken = authPort.generatePartToken(id);
+        return ParticipationSession.builder()
+                .id(id)
+                .token(partToken.getToken())
+                .validUntil(partToken.getValidUntil())
+                .build();
     }
 
     @Override
-    public Participation login(String roomId, String username, String password) {
+    public ParticipationSession login(String roomId, String username, String password) {
         if (Util.isNull(username) || Util.isNull(password)) throw new InvalidDataExceptionCustom("El nombre de usuario y la contraseña son obligatorios");
         Participation savedPart = partRepository.findByRoomIdAndUsername(roomId, username).orElseThrow(() -> new NotFoundExceptionCustom("El usuario no existe en esta sala"));
         partValidator.validateToLogin(savedPart, password);
-        return savedPart;
+        PartToken partToken = authPort.generatePartToken(savedPart.getId());
+        return ParticipationSession.builder()
+                .id(savedPart.getId())
+                .status(savedPart.getStatus())
+                .token(partToken.getToken())
+                .validUntil(partToken.getValidUntil())
+                .build();
     }
 
     @Override

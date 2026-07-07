@@ -31,21 +31,21 @@ public class UserController {
     @PatchMapping(path = "/user/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable String id, @RequestBody UpdateUserRequest userRequest) {
-        SecurityUtil.checkAuthorized(id);
+        SecurityUtil.checkAuthorizedUser(id);
         userService.update(userMapper.updateUserRequestToUser(id, userRequest));
     }
 
     @GetMapping(path = "/user/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserResponse findById(@PathVariable String id) {
-        SecurityUtil.checkAuthorized(id);
+        SecurityUtil.checkAuthorizedUser(id);
         return userMapper.userToUserResponse(userService.findById(id));
     }
 
     @PatchMapping(path = "/user/{id}/status")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateStatus(@PathVariable String id, @RequestBody UpdateUserStatusRequest statusRequest) {
-        SecurityUtil.checkAuthorized(id);
+        SecurityUtil.checkAuthorizedUser(id);
         userService.updateStatus(id, statusRequest.getActive());
     }
 }

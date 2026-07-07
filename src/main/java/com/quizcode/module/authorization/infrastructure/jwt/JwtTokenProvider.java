@@ -1,6 +1,7 @@
 package com.quizcode.module.authorization.infrastructure.jwt;
 
 import com.quizcode.module.authorization.domain.TokenProvider;
+import com.quizcode.module.authorization.domain.entity.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -15,6 +16,8 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider implements TokenProvider {
 
+    private static final String ROLE_CLAIM = "role";
+
     @Value("${jwt.secret}")
     private String secret;
 
@@ -27,17 +30,22 @@ public class JwtTokenProvider implements TokenProvider {
     }
 
     @Override
-    public String generateToken(String userId) {
+    public String generateToken(String id, Role role) {
         return Jwts.builder()
-                .subject(userId)
+                .subject(id)
+                .claim(ROLE_CLAIM, role.name())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationMillis))
                 .signWith(key)
                 .compact();
     }
 
-    public String extractUserId(String token) {
+    public String extractId(String token) {
         return parseToken(token).getSubject();
+    }
+
+    public Role extractRole(String token) {
+        return Role.valueOf(parseToken(token).get(ROLE_CLAIM, String.class));
     }
 
     @Override
