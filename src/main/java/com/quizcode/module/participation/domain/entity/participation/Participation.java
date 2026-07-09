@@ -42,8 +42,9 @@ public class Participation {
     }
 
     public void calculateTotalTime(Instant startedAt, Integer timeLimitSeconds) {
-        long elapsed = Duration.between(startedAt, this.finishedAt).toSeconds();
-        this.totalTime = timeLimitSeconds != null ? Math.min(elapsed, timeLimitSeconds) : elapsed;
+        long millis = Duration.between(startedAt, this.finishedAt).toMillis();
+        long seconds = (long) Math.ceil(millis / 1000.0);
+        this.totalTime = timeLimitSeconds != null ? Math.min(seconds, timeLimitSeconds) : seconds;
     }
 
     private void validate() {
