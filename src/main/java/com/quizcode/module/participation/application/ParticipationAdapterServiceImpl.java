@@ -37,4 +37,9 @@ public class ParticipationAdapterServiceImpl implements ParticipationAdapterServ
                 .map(p -> ParticipationStatus.FINISHED.equals(p.getStatus()))
                 .orElse(false);
     }
+
+    @Override
+    public void deleteParticipationsByRoomId(String roomId) {
+        participationRepository.deleteByRoomId(roomId);
+    }
 }

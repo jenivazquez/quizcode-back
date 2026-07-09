@@ -5,4 +5,5 @@ public interface ParticipationAdapterService {
     boolean hasPendingReviews(String roomId);
     boolean isParticipationStarted(String participationId);
     boolean isParticipationFinished(String participationId);
+    void deleteParticipationsByRoomId(String roomId);
 }

@@ -6,6 +6,7 @@ import com.quizcode.module.room.domain.RoomAdapterService;
 import com.quizcode.module.room.domain.RoomRepository;
 import com.quizcode.module.room.domain.entity.Room;
 import com.quizcode.module.room.domain.entity.RoomStatus;
+import com.quizcode.module.room.domain.port.RoomToParticipationPort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,10 +14,12 @@ public class RoomAdapterServiceImpl implements RoomAdapterService {
 
     private final RoomRepository roomRepository;
     private final RoomValidator roomValidator;
+    private final RoomToParticipationPort participationPort;
 
-    public RoomAdapterServiceImpl(RoomRepository roomRepository, RoomValidator roomValidator) {
+    public RoomAdapterServiceImpl(RoomRepository roomRepository, RoomValidator roomValidator, RoomToParticipationPort participationPort) {
         this.roomRepository = roomRepository;
         this.roomValidator = roomValidator;
+        this.participationPort = participationPort;
     }
 
     @Override
@@ -25,8 +28,9 @@ public class RoomAdapterServiceImpl implements RoomAdapterService {
     }
 
     @Override
-    public void deleteRoomsByQuizId(String quizId) {
+    public void deleteRoomsAndPartsByQuizId(String quizId) {
         roomValidator.validateToDeleteByQuizId(quizId);
+        roomRepository.findByQuizId(quizId).forEach(room -> participationPort.deleteParticipationsByRoomId(room.getId()));
         roomRepository.deleteByQuizId(quizId);
     }
 

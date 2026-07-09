@@ -22,4 +22,9 @@ public class ParticipationAdapter implements RoomToParticipationPort {
     public boolean hasPendingReviews(String roomId) {
         return participationAdapterService.hasPendingReviews(roomId);
     }
+
+    @Override
+    public void deleteParticipationsByRoomId(String roomId) {
+        participationAdapterService.deleteParticipationsByRoomId(roomId);
+    }
 }

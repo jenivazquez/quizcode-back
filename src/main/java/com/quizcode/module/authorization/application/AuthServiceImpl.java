@@ -6,6 +6,8 @@ import com.quizcode.module.authorization.domain.AuthService;
 import com.quizcode.module.authorization.domain.TokenProvider;
 import com.quizcode.module.authorization.domain.port.AuthToUserPort;
 import com.quizcode.module.authorization.domain.entity.Auth;
+import com.quizcode.module.authorization.domain.entity.PartAuth;
+import com.quizcode.module.authorization.domain.entity.Role;
 import com.quizcode.shared.Util;
 import org.springframework.stereotype.Service;
 
@@ -32,9 +34,27 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
+    @Override
+    public PartAuth generatePartToken(String partId) {
+        String token = buildPartToken(partId);
+        return PartAuth.builder()
+                .token(token)
+                .validUntil(tokenProvider.extractExpiration(token))
+                .partId(partId)
+                .build();
+    }
+
+    private String buildPartToken(String partId) {
+        try {
+            return tokenProvider.generateToken(partId, Role.PARTICIPATION);
+        } catch (Exception e) {
+            throw new AutoGenerationExceptionCustom("Error al generar el token de participación");
+        }
+    }
+
     private String generateToken(String userId) {
         try {
-            return tokenProvider.generateToken(userId);
+            return tokenProvider.generateToken(userId, Role.USER);
         } catch (Exception e) {
             throw new AutoGenerationExceptionCustom("Error al generar el token de autenticación");
         }

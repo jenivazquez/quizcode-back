@@ -3,7 +3,8 @@ package com.quizcode.module.participation.api.mapper;
 import com.quizcode.module.participation.api.dto.answer.AnswerReviewRequest;
 import com.quizcode.module.participation.api.dto.answer.AnswerRequest;
 import com.quizcode.module.participation.api.dto.answer.AnswerResponse;
-import com.quizcode.module.participation.api.dto.participation.LoginParticipationResponse;
+import com.quizcode.module.participation.api.dto.participation.CreatePartResponse;
+import com.quizcode.module.participation.api.dto.participation.LoginPartResponse;
 import com.quizcode.module.participation.api.dto.participation.ParticipationRequest;
 import com.quizcode.module.participation.api.dto.participation.PartRankingResponse;
 import com.quizcode.module.participation.api.dto.participation.ParticipationResponse;
@@ -13,6 +14,7 @@ import com.quizcode.module.participation.domain.entity.answer.ReviewedAnswer;
 import com.quizcode.module.participation.domain.entity.participation.SubmitParticipation;
 import com.quizcode.module.participation.domain.entity.participation.NewParticipation;
 import com.quizcode.module.participation.domain.entity.participation.Participation;
+import com.quizcode.module.participation.domain.entity.participation.ParticipationSession;
 import com.quizcode.module.user.domain.PasswordHasher;
 import org.springframework.stereotype.Component;
 
@@ -37,8 +39,12 @@ public class ParticipationMapper {
                 participation.getStartedAt(), participation.getFinishedAt(), participation.getTotalScore(), participation.getTotalTime(), answerResponses);
     }
 
-    public LoginParticipationResponse participationToLoginParticipationResponse(Participation participation) {
-        return new LoginParticipationResponse(participation.getId(), participation.getStatus());
+    public CreatePartResponse participationSessionToCreatePartResponse(ParticipationSession session) {
+        return new CreatePartResponse(session.getId(), session.getToken(), session.getValidUntil());
+    }
+
+    public LoginPartResponse participationSessionToLoginPartResponse(ParticipationSession session) {
+        return new LoginPartResponse(session.getId(), session.getStatus(), session.getToken(), session.getValidUntil());
     }
 
     public PartRankingResponse participationToPartRankingResponse(Participation participation) {

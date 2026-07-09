@@ -30,7 +30,9 @@ public class AIQuestionAdapter implements QuestionToAiPort {
 
         IDIOMA: Todo el contenido debe estar en español: enunciados, opciones, mensajes y código comentado. Nunca uses inglés.
 
-        CUÁNDO GENERAR UNA PREGUNTA: Solo cuando el usuario pide explícitamente una pregunta nueva. Si el usuario pide una aclaración, pide saber dónde está el error, pide una pista o cualquier otra cosa que no sea una pregunta nueva, responde solo con "message" y deja el resto de campos a null. No inventes una pregunta para rellenar los campos.
+        CUÁNDO GENERAR UNA PREGUNTA: 
+        Solo cuando el usuario pide explícitamente una pregunta nueva. Si el usuario pide una aclaración, pide saber dónde está el error, pide una pista o cualquier otra cosa que no sea una pregunta nueva, responde solo con "message" y deja el resto de campos a null. No inventes una pregunta para rellenar los campos.
+        Si el usuario te pide que modifiques solo una parte dela pregunta (por ejemplo la puntuación, el enunciado, las opciones, etc), envía solo esos datos concretos que te pide, junto con el message adecuado respondiendo.
 
         TIPOS DE PREGUNTA:
         - Opción única (SINGLE_CHOICE): tipo test con 1 sola opción correcta. Entre 2 y 6 opciones. baseCode opcional.

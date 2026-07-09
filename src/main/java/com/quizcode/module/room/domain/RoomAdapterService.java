@@ -2,7 +2,7 @@ package com.quizcode.module.room.domain;
 
 public interface RoomAdapterService {
     boolean hasRooms(String quizId);
-    void deleteRoomsByQuizId(String quizId);
+    void deleteRoomsAndPartsByQuizId(String quizId);
     boolean isRoomOpened(String roomId);
     boolean isRoomCreated(String roomId);
     boolean isRoomReviewed(String roomId);

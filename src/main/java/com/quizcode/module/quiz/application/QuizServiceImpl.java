@@ -9,6 +9,7 @@ import com.quizcode.module.quiz.domain.QuizService;
 import com.quizcode.module.quiz.domain.port.QuizToQuestionPort;
 import com.quizcode.module.quiz.domain.port.QuizToRoomPort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -65,9 +66,10 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
+    @Transactional
     public void delete(String id, String ownerId) {
         quizValidator.validateToDelete(id, ownerId);
-        roomPort.deleteRoomsByQuizId(id);
+        roomPort.deleteRoomsAndPartsByQuizId(id);
         questionPort.deleteQuestionsByQuizId(id);
         quizRepository.delete(id);
     }
